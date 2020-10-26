@@ -117,6 +117,7 @@ public class FlickrDataProvider {
                             JSONObject o = new JSONObject(response);
                             JSONArray jsonA = o.getJSONObject("photosets").getJSONArray("photoset");
                             Album[] albums = gson.fromJson(String.valueOf(jsonA), Album[].class);
+
                             List<Album> albumsFromAPI = Arrays.asList(albums);
                             List<Album> albumsWithTitles = setAlbumTitles(albumsFromAPI);
                             saveInDataBase(albumsWithTitles);
@@ -131,8 +132,7 @@ public class FlickrDataProvider {
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, error.getMessage());
             }
-        }
-        );
+        });
         FlickrApplication.getSharedQueue().add(stringRequest);
     }
 

@@ -1,4 +1,56 @@
 package com.example.flickr.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
+
+@Entity(tableName = "photo_table")
 public class Photo {
+
+    @SerializedName(value = "id")
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "id_photo")
+    private String photoID;
+
+    @ColumnInfo(name = "title")
+    @SerializedName(value = "title")
+    private String title;
+
+    @ForeignKey(entity = Album.class, parentColumns = "id_album", childColumns = "id_album")
+    @ColumnInfo(name = "id_album")
+    private String albumID;
+
+    public Photo(){
+
+    }
+
+    @NonNull
+    public String getPhotoID() {
+        return photoID;
+    }
+
+    public void setPhotoID(@NonNull String photoID) {
+        this.photoID = photoID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAlbumID() {
+        return albumID;
+    }
+
+    public void setAlbumID(String albumID) {
+        this.albumID = albumID;
+    }
 }

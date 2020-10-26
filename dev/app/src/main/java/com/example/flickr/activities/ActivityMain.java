@@ -17,6 +17,7 @@ import com.example.flickr.fragments.FragmentHome;
 import com.example.flickr.fragments.FragmentProfile;
 import com.example.flickr.fragments.FragmentSearch;
 import com.example.flickr.utils.BottomNavigationBarHelper;
+import com.google.gson.Gson;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class ActivityMain extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class ActivityMain extends AppCompatActivity {
     private Context context = this;
     private FragmentManager fragManager = getSupportFragmentManager();
 
-    private FlickrViewModel flickrViewModel;
+    //private FlickrViewModel flickrViewModel;
     private FrameLayout frameLayoutFragments;
 
     public FragmentHome fragmentHome;
@@ -43,12 +44,13 @@ public class ActivityMain extends AppCompatActivity {
 
         FlickrApplication.setViewModelStoreOwner(this);
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        FlickrApplication.getDataProvider().setConnectivityManager(cm);
+        FlickrApplication.getDataProvider().setGson(new Gson());
 
         frameLayoutFragments = (FrameLayout) findViewById(R.id.frameLayoutFragments);
         this.initializeFragments();
         this.setupBottomNavigationBar();
         this.startHomeFragment();
-
     }
 
     private void initializeFragments() {
