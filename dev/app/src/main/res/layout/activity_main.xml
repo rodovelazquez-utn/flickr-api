@@ -6,13 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".activities.ActivityMain">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Main Content -->
+    <RelativeLayout
+        android:id="@+id/relativeLayoutMainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayoutBottomNavigation"
+        android:layout_marginBottom="50dp">
+
+
+        <FrameLayout
+            android:id="@+id/frameLayoutFragments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+
+    <!-- Bottom Navigation Bar -->
+    <RelativeLayout
+        android:id="@+id/relativeLayoutBottomNavigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_below="@+id/relativeLayoutMainContent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/bottomNavigation"
+            layout="@layout/layout_bottom_navigation" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
