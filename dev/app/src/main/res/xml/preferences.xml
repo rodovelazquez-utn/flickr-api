@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Personal Information"
+        android:key="personal_category">
+
+        <EditTextPreference
+            android:key="name_field"
+            android:title="Nombre"
+            android:summary="Ingrese su nombre"
+            android:dialogTitle="Tu nombre..."
+            android:dialogMessage="Ingrese su nombre completo"
+            android:defaultValue=" "
+            android:inputType="textCapWords">
+
+        </EditTextPreference>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
