@@ -4,12 +4,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.model.Album;
+import com.example.flickr.utils.AdapterAlbums;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -34,37 +37,36 @@ public class FlickrDataProvider {
         this.gson = gson;
     }
 
-    public void loadFlickrAlbums() { // Could recieve a CustomAdapter as argument, and notifyDataSetChanged(); here
-        // lógica para ver si hay internet y en base a eso llamar a la BD o a la API
-        boolean contentOnDB = isContentOnDB();
-        boolean internet = isNetworkConnection();
+    public void loadFlickrAlbums(AdapterAlbums adapter) {
+        boolean contentOnDB = this.isContentOnDB();
+        boolean internet = this.isNetworkConnection();
 
         if (!internet){
             if (contentOnDB) {
-                List<Album> albums = searchAlbumsInDataBase();
+                List<Album> albums = this.searchAlbumsInDataBase();
                 if (albums == null) {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
-                // TODO: return albums??
-
+                adapter.setAlbums(albums);
             }
             else {
-                // ActivityMain.alertDialogNoInternet();
+                // TODO: ActivityMain.alertDialogNoInternet();
             }
         }
         else {
             if (contentOnDB) {
-                List<Album> albums = searchAlbumsInDataBase();
+                List<Album> albums = this.searchAlbumsInDataBase();
                 if (albums == null){
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
-                // showAlbums(); ???
-                getAlbumsFromAPI(); // This already saves the albums in the DB
-                // showAlbums(); ???
+                adapter.setAlbums(albums);
+
+                this.getAlbumsFromAPI(); // This already insert the albums in the DB
+                // The adapter's observer should refresh the view with the new albums saved
             }
             else {
-                getAlbumsFromAPI();
-                // showAlbums(); ???
+                this.getAlbumsFromAPI();
+                // The adapter's observer should refresh the view with the new albums saved
             }
         }
     }

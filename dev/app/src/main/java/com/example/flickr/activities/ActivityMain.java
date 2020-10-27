@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -16,11 +17,12 @@ import com.example.flickr.data.FlickrViewModel;
 import com.example.flickr.fragments.FragmentHome;
 import com.example.flickr.fragments.FragmentProfile;
 import com.example.flickr.fragments.FragmentSearch;
+import com.example.flickr.model.Album;
 import com.example.flickr.utils.BottomNavigationBarHelper;
 import com.google.gson.Gson;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-public class ActivityMain extends AppCompatActivity {
+public class ActivityMain extends AppCompatActivity implements FragmentHome.AlbumSelectedListener {
 
     private static final int ACTIVITY_NUMBER = 0;
     private static final String TAG = "ActivityMain";
@@ -53,9 +55,15 @@ public class ActivityMain extends AppCompatActivity {
         this.startHomeFragment();
     }
 
+    @Override
+    public void onAlbumSelected(Album album) {
+        // TODO: Replace HomeFragment with PhotoFragment
+        Log.d(TAG, "onAlbumSelected: Here the fragment is replaced");
+    }
+
     private void initializeFragments() {
         fragmentHome = new FragmentHome();
-        // fragmentHome.setOnAlbumSelectedListener(this);
+        fragmentHome.setOnAlbumSelectedListener(this);
         fragmentSearch = new FragmentSearch();
         fragmentProfile = new FragmentProfile();
     }
@@ -79,4 +87,5 @@ public class ActivityMain extends AppCompatActivity {
         // fragTransaction.addToBackStack(null);
         fragTransaction.add(R.id.frameLayoutFragments, fragmentHome, "HomeFragment").commit();
     }
+
 }

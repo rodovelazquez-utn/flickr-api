@@ -21,6 +21,7 @@ public class FlickrApplication extends Application {
     // This will be the only FlickrDataProvider instance
     private static FlickrDataProvider dataProvider;
 
+    // This will be the only FlickrViewModel instance
     private static ViewModelStoreOwner viewModelStoreOwner;
     private static FlickrViewModel viewModel;
 
