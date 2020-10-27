@@ -16,11 +16,14 @@ import android.widget.FrameLayout;
 
 import com.example.flickr.R;
 import com.example.flickr.data.FlickrViewModel;
+import com.example.flickr.fragments.FragmentAlbum;
 import com.example.flickr.fragments.FragmentHome;
+import com.example.flickr.fragments.FragmentPhoto;
 import com.example.flickr.fragments.FragmentProfile;
 import com.example.flickr.fragments.FragmentSearch;
 import com.example.flickr.model.Album;
 import com.example.flickr.utils.AdapterAlbums;
+import com.example.flickr.utils.AdapterPhotos;
 import com.example.flickr.utils.BottomNavigationBarHelper;
 import com.google.gson.Gson;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -55,9 +58,7 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
         ExecutorService executor = Executors.newFixedThreadPool(3);
         executor.execute(createViewModelTask);
 
-        // flickrViewModel = new ViewModelProvider(this).get(FlickrViewModel.class);
-        // FlickrApplication.setViewModelStoreOwner(this);
-        // FlickrApplication.setFlickrViewModel(flickrViewModel);
+        // onCreate() method continues after creating the FlickrViewModel
     }
 
     private void continueOnCreate() {
@@ -79,6 +80,13 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
     public void onAlbumSelected(Album album) {
         // TODO: Replace HomeFragment with PhotoFragment
         Log.d(TAG, "onAlbumSelected: Here the fragment is replaced");
+        FragmentAlbum fragmentAlbum = new FragmentAlbum();
+        fragmentAlbum.setAdapter(new AdapterPhotos(this));
+        fragmentAlbum.setAlbumID(album.getAlbumID());
+
+        FragmentTransaction fragTransaction = fragManager.beginTransaction();
+        fragTransaction.addToBackStack(null);
+        fragTransaction.replace(R.id.frameLayoutFragments, fragmentAlbum, "HomeFragment").commit();
     }
 
     private void initializeFragments() {

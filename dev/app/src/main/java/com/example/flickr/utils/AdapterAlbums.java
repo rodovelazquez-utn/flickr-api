@@ -19,7 +19,7 @@ import java.util.List;
 
 public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder> {
 
-    private static final String TAG = "CustomAdapter";
+    private static final String TAG = "AdapterAlbums";
     private LayoutInflater inflater;
     private List<Album> albums;
     //private List<Album> dataSet;

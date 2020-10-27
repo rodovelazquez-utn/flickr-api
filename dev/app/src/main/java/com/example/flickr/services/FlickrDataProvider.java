@@ -13,6 +13,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.model.Album;
 import com.example.flickr.utils.AdapterAlbums;
+import com.example.flickr.utils.AdapterPhotos;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -38,6 +39,7 @@ public class FlickrDataProvider {
     }
 
     public void loadFlickrAlbums(AdapterAlbums adapter) {
+
         boolean contentOnDB = this.isContentOnDB();
         boolean internet = this.isNetworkConnection();
 
@@ -69,6 +71,11 @@ public class FlickrDataProvider {
                 // The adapter's observer should refresh the view with the new albums saved
             }
         }
+    }
+
+    public void loadFlickrPhotos(AdapterPhotos adapter, String albumID) {
+        // sadasdasdasdasdasdadasd
+        Log.d(TAG, "loadFlickrPhotos: AlbumID: " + albumID);
     }
 
     private boolean isContentOnDB() {
