@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.model.Album;
+import com.example.flickr.model.Photo;
 import com.example.flickr.utils.AdapterAlbums;
 import com.example.flickr.utils.AdapterPhotos;
 import com.google.gson.Gson;
@@ -74,8 +75,40 @@ public class FlickrDataProvider {
     }
 
     public void loadFlickrPhotos(AdapterPhotos adapter, String albumID) {
-        // sadasdasdasdasdasdadasd
         Log.d(TAG, "loadFlickrPhotos: AlbumID: " + albumID);
+
+        boolean contentOnDB = this.isContentOnDB();
+        boolean internet = this.isNetworkConnection();
+
+        if (!internet){
+            if (contentOnDB) {
+                List<Photo> photos = this.searchPhotosInDataBase(albumID);
+                if (photos == null) {
+                    // TODO: throw new NotFoundException("Albums NOT FOUND");
+                }
+                adapter.setPhotos(photos);
+            }
+            else {
+                // TODO: ActivityMain.alertDialogNoInternet();
+            }
+        }
+        else {
+            if (contentOnDB) {
+                List<Photo> photos = this.searchPhotosInDataBase(albumID);
+                if (photos == null){
+                    // TODO: throw new NotFoundException("Albums NOT FOUND");
+                }
+                adapter.setPhotos(photos);
+
+                this.getPhotosFromAPI(albumID); // This already insert the photos in the DB
+                // The adapter's observer should refresh the view with the new photos saved
+            }
+            else {
+                this.getPhotosFromAPI(albumID);
+                // The adapter's observer should refresh the view with the new photos saved
+            }
+        }
+
     }
 
     private boolean isContentOnDB() {
@@ -129,7 +162,7 @@ public class FlickrDataProvider {
 
                             List<Album> albumsFromAPI = Arrays.asList(albums);
                             List<Album> albumsWithTitles = setAlbumTitles(albumsFromAPI);
-                            saveInDataBase(albumsWithTitles);
+                            saveAlbumsInDataBase(albumsWithTitles);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "onResponse: EXCEPTION --> " + e.getMessage());
@@ -145,12 +178,59 @@ public class FlickrDataProvider {
         FlickrApplication.getSharedQueue().add(stringRequest);
     }
 
-    private void saveInDataBase(List<Album> albums) {
+    private void getPhotosFromAPI(String albumId) {
+        String url = "https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&" +
+                "api_key=1604dce64ecf5181a526b2de04a89b9f&photoset_id=" + albumId +
+                "&user_id=138707650%40N07&format=json&nojsoncallback=1";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject o = new JSONObject(response);
+                            JSONArray jsonA = o.getJSONObject("photoset").getJSONArray("photo");
+                            Photo[] photos = gson.fromJson(String.valueOf(jsonA), Photo[].class);
+
+                            List<Photo> photosFromAPI = Arrays.asList(photos);
+                            for (int i = 0; i < photosFromAPI.size(); i++) {
+                                photosFromAPI.get(i).setAlbumID(albumId);
+                            }
+                            savePhotosInDataBase(photosFromAPI);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "onResponse: EXCEPTION --> " + e.getMessage());
+                        }
+                        Log.d(TAG, response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.getMessage());
+            }
+        });
+        FlickrApplication.getSharedQueue().add(stringRequest);
+    }
+
+    private void saveAlbumsInDataBase(List<Album> albums) {
         for (int i = 0; i < albums.size(); i++) {
             try {
                 FlickrApplication.getViewModel().insert(albums.get(i));
                 //viewModel.insert(albumsFromAPI.get(i));
                 //Es bueno hacer el ViewModel único ??
+            }
+            catch (Exception e){
+                Log.d(TAG, "saveInDataBase: ERROR AL HACER EL INSERT EN LA BASE DE DATOS");
+                // TODO: new AlertDialogMessage(e.getMessage());
+            }
+        }
+    }
+
+    private void savePhotosInDataBase(List<Photo> photos) {
+        for (int i = 0; i < photos.size(); i++) {
+            try {
+                FlickrApplication.getViewModel().insert(photos.get(i));
+                //viewModel.insert(albumsFromAPI.get(i));
             }
             catch (Exception e){
                 Log.d(TAG, "saveInDataBase: ERROR AL HACER EL INSERT EN LA BASE DE DATOS");
@@ -169,6 +249,19 @@ public class FlickrDataProvider {
             Log.d(TAG, "searchAlbumsInDataBase: EXCEPTION --> " + e.getMessage());
         }
         return albums = null;
+        // throw new Resources.NotFoundException("ALBUMES NO ENCONTRADOS EN LA BD");
+    }
+
+    private List<Photo> searchPhotosInDataBase(String albumId) {
+        List<Photo> photos;
+        try {
+            photos = FlickrApplication.getViewModel().getAllPhotos().getValue();
+            return photos;
+        }
+        catch (Exception e) {
+            Log.d(TAG, "searchAlbumsInDataBase: EXCEPTION --> " + e.getMessage());
+        }
+        return photos = null;
         // throw new Resources.NotFoundException("ALBUMES NO ENCONTRADOS EN LA BD");
     }
 

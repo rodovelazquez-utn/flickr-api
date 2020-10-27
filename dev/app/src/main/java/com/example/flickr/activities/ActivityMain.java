@@ -22,6 +22,7 @@ import com.example.flickr.fragments.FragmentPhoto;
 import com.example.flickr.fragments.FragmentProfile;
 import com.example.flickr.fragments.FragmentSearch;
 import com.example.flickr.model.Album;
+import com.example.flickr.model.Photo;
 import com.example.flickr.utils.AdapterAlbums;
 import com.example.flickr.utils.AdapterPhotos;
 import com.example.flickr.utils.BottomNavigationBarHelper;
@@ -31,7 +32,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ActivityMain extends AppCompatActivity implements FragmentHome.AlbumSelectedListener {
+public class ActivityMain extends AppCompatActivity implements FragmentHome.AlbumSelectedListener, FragmentAlbum.PhotoSelectedListener {
 
     private static final int ACTIVITY_NUMBER = 0;
     private static final String TAG = "ActivityMain";
@@ -83,10 +84,16 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
         FragmentAlbum fragmentAlbum = new FragmentAlbum();
         fragmentAlbum.setAdapter(new AdapterPhotos(this));
         fragmentAlbum.setAlbumID(album.getAlbumID());
+        fragmentAlbum.setOnPhotoSelectedListener(this);
 
         FragmentTransaction fragTransaction = fragManager.beginTransaction();
         fragTransaction.addToBackStack(null);
         fragTransaction.replace(R.id.frameLayoutFragments, fragmentAlbum, "HomeFragment").commit();
+    }
+
+    @Override
+    public void onPhotoSelected(Photo photo) {
+        Log.d(TAG, "onPhotoSelected: Here the fragment is replaced");
     }
 
     private void initializeFragments() {
@@ -114,6 +121,8 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
         // fragTransaction.addToBackStack(null);
         fragTransaction.add(R.id.frameLayoutFragments, fragmentHome, "HomeFragment").commit();
     }
+
+
 
 
     protected class CreateViewModelTask implements Runnable {
