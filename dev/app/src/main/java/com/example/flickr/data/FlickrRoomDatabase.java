@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {Album.class, Photo.class, Comment.class},
-        version = 1, exportSchema = false)
+        version = 2, exportSchema = false)
 abstract class FlickrRoomDatabase extends RoomDatabase {
     abstract AlbumDao albumDao();
     abstract CommentDao commentDao();
@@ -32,7 +32,7 @@ abstract class FlickrRoomDatabase extends RoomDatabase {
             synchronized (FlickrRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            FlickrRoomDatabase.class, "flickr_database")
+                            FlickrRoomDatabase.class, "flickr_db")
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }

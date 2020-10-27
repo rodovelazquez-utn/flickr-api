@@ -25,6 +25,10 @@ public class FlickrApplication extends Application {
     private static ViewModelStoreOwner viewModelStoreOwner;
     private static FlickrViewModel viewModel;
 
+    public static void setFlickrViewModel(FlickrViewModel vm){
+        viewModel = vm;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -52,6 +56,9 @@ public class FlickrApplication extends Application {
 
     private static void createViewModel() {
         if (viewModel == null) {
+            // viewModel = new ViewModelProvider(requireActivity()).get(FlickrViewModel.class);
+            // viewModel = new ViewModelProvider(requireActivity(),
+            //      getDefaultViewModelProviderFactory()).get(FlickrViewModel.class);
             viewModel = new ViewModelProvider(viewModelStoreOwner).get(FlickrViewModel.class);
         }
     }

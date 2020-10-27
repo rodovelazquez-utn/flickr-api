@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +33,10 @@ public class FragmentHome extends Fragment {
     private AdapterAlbums adapter;
     private GridLayoutManager layoutManager;
 
+    public void setAdapter(AdapterAlbums ad) {
+        adapter = ad;
+    }
+
     public FragmentHome() {
         // Required empty public constructor
     }
@@ -53,7 +57,7 @@ public class FragmentHome extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 3);
         this.setRecyclerViewLayoutManager();
 
-        adapter = new AdapterAlbums(getActivity());
+        // adapter = new AdapterAlbums(getActivity());
         recyclerView.setAdapter(adapter);
 
         FlickrApplication.getViewModel().getAllAlbums().observe(getActivity(), new Observer<List<Album>>() {
