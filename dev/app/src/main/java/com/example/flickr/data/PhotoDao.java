@@ -15,6 +15,12 @@ public interface PhotoDao {
     @Query("SELECT * FROM photo_table")
     LiveData<List<Photo>> getPhotos();
 
+    @Query("SELECT * FROM photo_table WHERE id_photo = :id")
+    LiveData<List<Photo>> getPhotosWhereId(String id);
+
+    @Query("SELECT * FROM photo_table WHERE id_album = :idAlbum")
+    LiveData<List<Photo>> getPhotosWhereAlbumId(String idAlbum);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Photo photo);
 

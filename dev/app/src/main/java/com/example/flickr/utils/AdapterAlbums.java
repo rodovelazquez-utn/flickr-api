@@ -52,7 +52,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     public int getItemCount() {
         if (albums == null){
             Log.d(TAG, "getItemCount: ALBUMS IS NULL");
-            return 10000;
+            return 0;
         }
         return albums.size();
     }

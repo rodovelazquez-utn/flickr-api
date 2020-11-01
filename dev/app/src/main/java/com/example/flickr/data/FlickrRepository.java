@@ -17,9 +17,14 @@ public class FlickrRepository {
     private PhotoDao photoDao;
 
     private LiveData<List<Album>> allAlbums;
+    private LiveData<List<Album>> albumsById;
     private int albumCount;
     private LiveData<List<Comment>> allComments;
+    private LiveData<List<Comment>> commentsById;
+    private LiveData<List<Comment>> commentsByPhotoId;
     private LiveData<List<Photo>> allPhotos;
+    private LiveData<List<Photo>> photosById;
+    private LiveData<List<Photo>> photosByAlbumId;
 
     FlickrRepository(Application application) {
         FlickrRoomDatabase db = FlickrRoomDatabase.getDataBase(application);
@@ -38,13 +43,27 @@ public class FlickrRepository {
     public LiveData<List<Album>> getAllAlbums() {
         return allAlbums;
     }
+    public LiveData<List<Album>> getAlbumsWhereId(String id) {
+        return albumDao.getAlbumsWhereId(id);
+    }
+    public int getAlbumCount() { return albumCount; }
+    public String getAlbumPhotoCount() { return albumDao.getAlbumPhotoCount(); }
+
     public LiveData<List<Comment>> getAllComments() {
         return allComments;
     }
+    public LiveData<List<Comment>> getCommentsWhereId(String id) { return commentDao.getCommentsWhereId(id); }
+    public LiveData<List<Comment>> getCommentsWhereIdPhoto(String id) { return commentDao.getCommentsWhereIdPhoto(id); }
+
     public LiveData<List<Photo>> getAllPhotos() {
         return allPhotos;
     }
-    public int getAlbumCount() { return albumCount; }
+    public LiveData<List<Photo>> getPhotosWhereId(String id) {
+        return photoDao.getPhotosWhereId(id);
+    }
+    public LiveData<List<Photo>> getPhotosWhereAlbumId(String id) {
+        return photoDao.getPhotosWhereAlbumId(id);
+    }
 
     public void insert(Album album) {
         FlickrRoomDatabase.databaseWriteExecutor.execute(() -> {

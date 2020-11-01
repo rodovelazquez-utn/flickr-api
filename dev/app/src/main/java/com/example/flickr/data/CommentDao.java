@@ -15,6 +15,12 @@ public interface CommentDao {
     @Query("SELECT * FROM comment_table")
     LiveData<List<Comment>> getComments();
 
+    @Query("SELECT * FROM comment_table WHERE id_comment = :id")
+    LiveData<List<Comment>> getCommentsWhereId(String id);
+
+    @Query("SELECT * FROM comment_table WHERE id_photo = :idPhoto")
+    LiveData<List<Comment>> getCommentsWhereIdPhoto(String idPhoto);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Comment comment);
 

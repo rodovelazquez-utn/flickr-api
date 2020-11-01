@@ -17,6 +17,10 @@ public class Album {
     @ColumnInfo(name = "id_album")
     private String albumID;
 
+    @ColumnInfo(name = "size")
+    @SerializedName(value = "count_photos")
+    private String albumCount;
+
     @ColumnInfo(name = "id_owner")
     @SerializedName(value = "owner")
     private String ownerID;
@@ -75,5 +79,13 @@ public class Album {
 
     public void setAlbumTitle(AlbumTitle albumTitle) {
         this.albumTitle = albumTitle;
+    }
+
+    public String getAlbumCount() {
+        return albumCount;
+    }
+
+    public void setAlbumCount(String albumCount) {
+        this.albumCount = albumCount;
     }
 }

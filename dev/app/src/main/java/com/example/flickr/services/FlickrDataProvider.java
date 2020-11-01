@@ -4,6 +4,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -82,7 +83,7 @@ public class FlickrDataProvider {
 
         if (!internet){
             if (contentOnDB) {
-                List<Photo> photos = this.searchPhotosInDataBase(albumID);
+                List<Photo> photos = this.searchExistingPhotosInDataBase(albumID);
                 if (photos == null) {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
@@ -94,7 +95,7 @@ public class FlickrDataProvider {
         }
         else {
             if (contentOnDB) {
-                List<Photo> photos = this.searchPhotosInDataBase(albumID);
+                List<Photo> photos = this.searchExistingPhotosInDataBase(albumID);
                 if (photos == null){
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
@@ -192,6 +193,11 @@ public class FlickrDataProvider {
                             JSONArray jsonA = o.getJSONObject("photoset").getJSONArray("photo");
                             Photo[] photos = gson.fromJson(String.valueOf(jsonA), Photo[].class);
 
+                            /*JSONObject photoCount = o.getJSONObject("total");
+                            int count = gson.fromJson(String.valueOf(photoCount), Integer.class);
+                            LiveData<List<Album>> alb = FlickrApplication.getViewModel().getAlbumsWhereId(albumId);
+                            alb.getValue().get(0).setAlbumCount(count);*/
+
                             List<Photo> photosFromAPI = Arrays.asList(photos);
                             for (int i = 0; i < photosFromAPI.size(); i++) {
                                 photosFromAPI.get(i).setAlbumID(albumId);
@@ -252,6 +258,10 @@ public class FlickrDataProvider {
         // throw new Resources.NotFoundException("ALBUMES NO ENCONTRADOS EN LA BD");
     }
 
+    /*private List<Album> searchExistingAlbumsInDataBase() {
+        return null;
+    }*/
+
     private List<Photo> searchPhotosInDataBase(String albumId) {
         List<Photo> photos;
         try {
@@ -265,4 +275,24 @@ public class FlickrDataProvider {
         // throw new Resources.NotFoundException("ALBUMES NO ENCONTRADOS EN LA BD");
     }
 
+    private List<Photo> searchExistingPhotosInDataBase(String albumId) {
+        Photo[] array = new Photo[0];
+        List<Photo> photos = Arrays.asList(array);
+        //int albumCount = Integer.parseInt(album.getAlbumCount());
+        try {
+            /*for (int i = 0; i < albumCount; i++) {
+            }*/
+            photos = FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumId).getValue();
+            return photos;
+        }
+        catch (Exception e) {
+            Log.d(TAG, "searchExistingPhotosInDataBase: EXCEPTION --> " + e.getMessage());
+        }
+        return photos = null;
+    }
+
 }
+
+
+// setPhotoBitmap:
+// ImageView.setImageURI(Uri.parse(new File("/sdcard/cats.jpg").toString()));

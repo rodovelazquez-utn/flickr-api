@@ -79,7 +79,6 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
 
     @Override
     public void onAlbumSelected(Album album) {
-        // TODO: Replace HomeFragment with PhotoFragment
         Log.d(TAG, "onAlbumSelected: Here the fragment is replaced");
         FragmentAlbum fragmentAlbum = new FragmentAlbum();
         fragmentAlbum.setAdapter(new AdapterPhotos(this));

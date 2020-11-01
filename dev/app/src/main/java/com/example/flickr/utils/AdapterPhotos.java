@@ -46,7 +46,7 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         Log.d(TAG, "Element " + position + " set.");
         if (photos != null){
-            viewHolder.getTextViewNumber().setText(photos.get(position).getAlbumID());
+            viewHolder.getTextViewNumber().setText(photos.get(position).getPhotoID());
         }
     }
 
@@ -54,7 +54,7 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
     public int getItemCount() {
         if (photos == null){
             Log.d(TAG, "getItemCount: PHOTOS IS NULL");
-            return 10000;
+            return 0;
         }
         return photos.size();
     }

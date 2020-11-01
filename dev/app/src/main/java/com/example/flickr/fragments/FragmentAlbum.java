@@ -65,7 +65,7 @@ public class FragmentAlbum extends Fragment {
         // adapter = new AdapterAlbums(getActivity());
         recyclerView.setAdapter(adapter);
 
-        FlickrApplication.getViewModel().getAllPhotos().observe(getActivity(), new Observer<List<Photo>>() {
+        FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumID).observe(getActivity(), new Observer<List<Photo>>() {
             @Override
             public void onChanged(List<Photo> photos) {
                 adapter.setPhotos(photos);
@@ -103,6 +103,12 @@ public class FragmentAlbum extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.scrollToPosition(scrollPosition);
     }
+
+    /*@Override
+    public void onStop() {
+        super.onStop();
+        adapter.setPhotos(null);
+    }*/
 
     public interface PhotoSelectedListener {
         void onPhotoSelected(Photo photo);

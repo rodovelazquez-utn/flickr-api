@@ -15,6 +15,9 @@ public interface AlbumDao {
     @Query("SELECT * FROM album_table")
     LiveData<List<Album>> getAlbums();
 
+    @Query("SELECT * FROM album_table WHERE id_album = :id")
+    LiveData<List<Album>> getAlbumsWhereId(String id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Album album);
 
@@ -23,4 +26,7 @@ public interface AlbumDao {
 
     @Query("SELECT COUNT(*) FROM album_table")
     int countAlbums();
+
+    @Query("SELECT size FROM album_table")
+    String getAlbumPhotoCount();
 }
