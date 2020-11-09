@@ -25,6 +25,14 @@ public class Photo {
     @ColumnInfo(name = "id_album")
     private String albumID;
 
+    @ColumnInfo(name = "secret")
+    @SerializedName(value = "secret")
+    private String secret;
+
+    @ColumnInfo(name = "server")
+    @SerializedName(value = "server")
+    private String server;
+
     public Photo(){
 
     }
@@ -52,5 +60,21 @@ public class Photo {
 
     public void setAlbumID(String albumID) {
         this.albumID = albumID;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
     }
 }

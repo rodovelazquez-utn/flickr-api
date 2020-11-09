@@ -16,14 +16,9 @@ public class FlickrViewModel extends AndroidViewModel {
 
     private FlickrRepository repository;
     private LiveData<List<Album>> allAlbums;
-    private LiveData<List<Album>> albumsById;
     private int albumCount;
     private LiveData<List<Comment>> allComments;
-    private LiveData<List<Comment>> commentsById;
-    private LiveData<List<Comment>> commentsByPhotoId;
     private LiveData<List<Photo>> allPhotos;
-    private LiveData<List<Photo>> photosById;
-    private LiveData<List<Photo>> photosByAlbumId;
 
     public FlickrViewModel(@NonNull Application application) {
         super(application);

@@ -12,13 +12,13 @@ import java.util.List;
 
 @Dao
 public interface AlbumDao {
-    @Query("SELECT * FROM album_table")
+    @Query("SELECT * FROM album_table ORDER BY id_album")
     LiveData<List<Album>> getAlbums();
 
-    @Query("SELECT * FROM album_table WHERE id_album = :id")
+    @Query("SELECT * FROM album_table WHERE id_album = :id ORDER BY id_album")
     LiveData<List<Album>> getAlbumsWhereId(String id);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Album album);
 
     @Query("DELETE FROM album_table")

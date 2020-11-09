@@ -12,16 +12,16 @@ import java.util.List;
 
 @Dao
 public interface CommentDao {
-    @Query("SELECT * FROM comment_table")
+    @Query("SELECT * FROM comment_table ORDER BY id_comment")
     LiveData<List<Comment>> getComments();
 
-    @Query("SELECT * FROM comment_table WHERE id_comment = :id")
+    @Query("SELECT * FROM comment_table WHERE id_comment = :id ORDER BY id_comment")
     LiveData<List<Comment>> getCommentsWhereId(String id);
 
     @Query("SELECT * FROM comment_table WHERE id_photo = :idPhoto")
     LiveData<List<Comment>> getCommentsWhereIdPhoto(String idPhoto);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Comment comment);
 
     @Query("DELETE FROM comment_table")

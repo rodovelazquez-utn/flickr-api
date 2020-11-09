@@ -11,6 +11,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.example.flickr.data.FlickrViewModel;
+import com.example.flickr.services.FlickrBitmapProvider;
 import com.example.flickr.services.FlickrDataProvider;
 
 public class FlickrApplication extends Application {
@@ -20,6 +21,7 @@ public class FlickrApplication extends Application {
 
     // This will be the only FlickrDataProvider instance
     private static FlickrDataProvider dataProvider;
+    private static FlickrBitmapProvider bitmapProvider;
 
     // This will be the only FlickrViewModel instance
     private static ViewModelStoreOwner viewModelStoreOwner;
@@ -33,6 +35,8 @@ public class FlickrApplication extends Application {
     public void onCreate() {
         super.onCreate();
         dataProvider = new FlickrDataProvider();
+        bitmapProvider = new FlickrBitmapProvider(getApplicationContext());
+
         queue = Volley.newRequestQueue(this);
         imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             private final LruCache<String, Bitmap> cache = new LruCache<>(20);
@@ -77,6 +81,10 @@ public class FlickrApplication extends Application {
 
     public static FlickrDataProvider getDataProvider() {
         return dataProvider;
+    }
+
+    public static FlickrBitmapProvider getBitmapProvider() {
+        return bitmapProvider;
     }
 
 }

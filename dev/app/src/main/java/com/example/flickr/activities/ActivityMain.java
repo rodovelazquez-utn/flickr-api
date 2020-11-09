@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,15 +18,20 @@ import android.widget.FrameLayout;
 import com.example.flickr.R;
 import com.example.flickr.data.FlickrViewModel;
 import com.example.flickr.fragments.FragmentAlbum;
+import com.example.flickr.fragments.FragmentComments;
 import com.example.flickr.fragments.FragmentHome;
 import com.example.flickr.fragments.FragmentPhoto;
 import com.example.flickr.fragments.FragmentProfile;
 import com.example.flickr.fragments.FragmentSearch;
+import com.example.flickr.fragments.FragmentViewpager;
 import com.example.flickr.model.Album;
 import com.example.flickr.model.Photo;
+import com.example.flickr.services.FlickrBitmapProvider;
 import com.example.flickr.utils.AdapterAlbums;
+import com.example.flickr.utils.AdapterComments;
 import com.example.flickr.utils.AdapterPhotos;
 import com.example.flickr.utils.BottomNavigationBarHelper;
+import com.example.flickr.utils.ViewpagerAdapter;
 import com.google.gson.Gson;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -45,6 +51,11 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
     public FragmentHome fragmentHome;
     public FragmentSearch fragmentSearch;
     public FragmentProfile fragmentProfile;
+    private FragmentViewpager fragmentViewPager;
+
+    public Context getContext() {
+        return context;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +104,31 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
     @Override
     public void onPhotoSelected(Photo photo) {
         Log.d(TAG, "onPhotoSelected: Here the fragment is replaced");
+
+        //Bitmap b = FlickrApplication.getBitmapProvider().getBitmapFromUrl(photo);
+
+        //FragmentViewpager fragViewpager = new FragmentViewpager();
+        fragmentViewPager.setAdapter(new ViewpagerAdapter(fragManager));
+        //FragmentPhoto fragPhoto = new FragmentPhoto();
+        //FragmentComments fragComments = new FragmentComments();
+        //fragComments.setAdapter(new AdapterComments(this));
+
+        fragmentViewPager.setPhotoID(photo.getPhotoID());
+        //fragmentViewPager.setBitmap(b);
+        fragmentViewPager.setAlbumID(photo.getAlbumID());
+        //fragViewpager.setFragmentPhoto(fragPhoto);
+        //fragViewpager.setFragmentComments(fragComments);
+
+        FragmentTransaction fragTransaction = fragManager.beginTransaction();
+        fragTransaction.addToBackStack(null);
+        fragTransaction.replace(R.id.frameLayoutFragments, fragmentViewPager, "ViewpagerFragment").commit();
     }
 
     private void initializeFragments() {
         fragmentHome = new FragmentHome();
         fragmentSearch = new FragmentSearch();
         fragmentProfile = new FragmentProfile();
+        fragmentViewPager = new FragmentViewpager();
     }
 
     private void setupBottomNavigationBar() {
@@ -120,8 +150,6 @@ public class ActivityMain extends AppCompatActivity implements FragmentHome.Albu
         // fragTransaction.addToBackStack(null);
         fragTransaction.add(R.id.frameLayoutFragments, fragmentHome, "HomeFragment").commit();
     }
-
-
 
 
     protected class CreateViewModelTask implements Runnable {
