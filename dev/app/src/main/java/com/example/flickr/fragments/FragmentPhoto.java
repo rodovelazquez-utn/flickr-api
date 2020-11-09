@@ -37,7 +37,7 @@ public class FragmentPhoto extends Fragment {
         imageViewPhoto = container.findViewById(R.id.imageViewPhoto);
         //imageViewPhoto.setImageBitmap(bitmap);
 
-        FlickrApplication.getBitmapProvider().getBitmap(getActivity(), imageViewPhoto);
+        // FlickrApplication.getBitmapProvider().getBitmap(getActivity(), imageViewPhoto);
         return inflater.inflate(R.layout.fragment_photo, container, false);
     }
 }
