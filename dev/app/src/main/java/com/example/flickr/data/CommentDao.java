@@ -21,7 +21,7 @@ public interface CommentDao {
     @Query("SELECT * FROM comment_table WHERE id_photo = :idPhoto")
     LiveData<List<Comment>> getCommentsWhereIdPhoto(String idPhoto);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Comment comment);
 
     @Query("DELETE FROM comment_table")

@@ -16,6 +16,7 @@ public class FlickrViewModel extends AndroidViewModel {
 
     private FlickrRepository repository;
     private LiveData<List<Album>> allAlbums;
+    private LiveData<List<Album>> allAlbumsOrderedTitle;
     private int albumCount;
     private LiveData<List<Comment>> allComments;
     private LiveData<List<Photo>> allPhotos;
@@ -25,6 +26,7 @@ public class FlickrViewModel extends AndroidViewModel {
 
         repository = new FlickrRepository(application);
         allAlbums = repository.getAllAlbums();
+        allAlbumsOrderedTitle  = repository.getAlbumsOrderTitle();
         albumCount = repository.getAlbumCount();
         allComments = repository.getAllComments();
         allPhotos = repository.getAllPhotos();
@@ -66,6 +68,19 @@ public class FlickrViewModel extends AndroidViewModel {
 
     public LiveData<List<Photo>> getPhotosWhereAlbumId(String id) {
         return repository.getPhotosWhereAlbumId(id);
+    }
+
+    public LiveData<List<Album>> getAlbumsOrderTitle() { return allAlbumsOrderedTitle; }
+    public LiveData<List<Album>> getAlbumsWhereIdOrderTitle(String id) {
+        return repository.getAlbumsWhereIdOrderTitle(id);
+    }
+
+    public LiveData<List<Photo>> getPhotosOrderTitle() { return repository.getPhotosOrderTitle(); }
+    public LiveData<List<Photo>> getPhotosWhereIdOrderTitle(String id) {
+        return repository.getPhotosWhereIdOrderTitle(id);
+    }
+    public LiveData<List<Photo>> getPhotosWhereAlbumIdOrderTitle(String idAlbum){
+        return repository.getPhotosWhereAlbumIdOrderTitle(idAlbum);
     }
 
     public void insert(Album album) {

@@ -1,7 +1,10 @@
 package com.example.flickr.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class AlbumTitle {
 
+    @SerializedName(value = "_content")
     private String title;
 
     public AlbumTitle(){

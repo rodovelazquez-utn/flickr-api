@@ -1,9 +1,13 @@
 package com.example.flickr.services;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +35,20 @@ public class FlickrDataProvider {
 
     private ConnectivityManager connectivityManager;
     private Gson gson;
+    private SharedPreferences sharedPreferences;
+    private Context context;
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
+    public void setSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
 
     public void setConnectivityManager(ConnectivityManager connectivityManager) {
         this.connectivityManager = connectivityManager;
@@ -47,19 +65,33 @@ public class FlickrDataProvider {
 
         if (!internet){
             if (contentOnDB) {
-                List<Album> albums = this.searchAlbumsInDataBase();
+                String preference = "";
+                if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+                    preference = "name";
+                }
+                else {
+                    preference = "id";
+                }
+                List<Album> albums = this.searchAlbumsInDataBase(preference);
                 if (albums == null) {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setAlbums(albums);
             }
             else {
-                // TODO: ActivityMain.alertDialogNoInternet();
+                this.dialogEmptyDB();
             }
         }
         else {
             if (contentOnDB) {
-                List<Album> albums = this.searchAlbumsInDataBase();
+                String preference = "";
+                if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+                    preference = "name";
+                }
+                else {
+                    preference = "id";
+                }
+                List<Album> albums = this.searchAlbumsInDataBase(preference);
                 if (albums == null){
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
@@ -83,20 +115,34 @@ public class FlickrDataProvider {
 
         if (!internet){
             if (contentOnDB) {
-                List<Photo> photos = this.searchExistingPhotosInDataBase(albumID);
+                String preference = "";
+                if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+                       preference = "name";
+                }
+                else {
+                    preference = "id";
+                }
+                List<Photo> photos = this.searchExistingPhotosInDataBase(albumID, preference);
                 if (photos == null) {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setPhotos(photos);
             }
             else {
-                // TODO: ActivityMain.alertDialogNoInternet();
+                this.dialogEmptyDB();
             }
         }
         else {
             if (contentOnDB) {
-                List<Photo> photos = this.searchExistingPhotosInDataBase(albumID);
-                if (photos == null){
+                String preference = "";
+                if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+                    preference = "name";
+                }
+                else {
+                    preference = "id";
+                }
+                List<Photo> photos = this.searchExistingPhotosInDataBase(albumID, preference);
+                if (photos == null) {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setPhotos(photos);
@@ -112,6 +158,21 @@ public class FlickrDataProvider {
 
     }
 
+    private void dialogEmptyDB(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Error!");
+        builder.setMessage("No hay datos para mostrar en la Base de Datos. Intente activar su " +
+                "conexión a Internet para conectarse con la API y poder recibir las fotos");
+
+        builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private boolean isContentOnDB() {
         if (FlickrApplication.getViewModel().getAlbumCount() == 0) {
             return false;
@@ -121,7 +182,7 @@ public class FlickrDataProvider {
         }
     }
 
-    private boolean isNetworkConnection() {
+    public boolean isNetworkConnection() {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
@@ -245,10 +306,17 @@ public class FlickrDataProvider {
         }
     }
 
-    private List<Album> searchAlbumsInDataBase() {
+    private List<Album> searchAlbumsInDataBase(String preference) {
         List<Album> albums;
         try {
-            albums = FlickrApplication.getViewModel().getAllAlbums().getValue();
+            if (preference.equals("id")){
+                albums = FlickrApplication.getViewModel().getAllAlbums().getValue();
+            }
+            else
+            {
+                albums = FlickrApplication.getViewModel().getAlbumsOrderTitle().getValue();
+            }
+
             return albums;
         }
         catch (Exception e) {
@@ -275,14 +343,21 @@ public class FlickrDataProvider {
         // throw new Resources.NotFoundException("ALBUMES NO ENCONTRADOS EN LA BD");
     }
 
-    private List<Photo> searchExistingPhotosInDataBase(String albumId) {
+    private List<Photo> searchExistingPhotosInDataBase(String albumId, String preference) {
         Photo[] array = new Photo[0];
         List<Photo> photos = Arrays.asList(array);
         //int albumCount = Integer.parseInt(album.getAlbumCount());
         try {
             /*for (int i = 0; i < albumCount; i++) {
             }*/
-            photos = FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumId).getValue();
+            if (preference.equals("id")) {
+                photos = FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumId).getValue();
+            }
+            else
+            {
+                photos = FlickrApplication.getViewModel().getPhotosWhereAlbumIdOrderTitle(albumId).getValue();
+            }
+
             return photos;
         }
         catch (Exception e) {

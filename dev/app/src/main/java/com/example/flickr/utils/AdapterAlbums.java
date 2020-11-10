@@ -45,6 +45,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
         Log.d(TAG, "Element " + position + " set.");
         if (albums != null){
             viewHolder.getTextViewTitle().setText(albums.get(position).getAlbumID());
+            viewHolder.getTextViewDescription().setText(albums.get(position).getTitulo());
         }
     }
 

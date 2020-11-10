@@ -17,6 +17,7 @@ public class FlickrRepository {
     private PhotoDao photoDao;
 
     private LiveData<List<Album>> allAlbums;
+    private LiveData<List<Album>> allAlbumsOrderedTitle;
     private int albumCount;
     private LiveData<List<Comment>> allComments;
     private LiveData<List<Photo>> allPhotos;
@@ -26,6 +27,7 @@ public class FlickrRepository {
 
         albumDao = db.albumDao();
         allAlbums = albumDao.getAlbums();
+        allAlbumsOrderedTitle = albumDao.getAlbumsOrderTitle();
         albumCount = albumDao.countAlbums();
 
         commentDao = db.commentDao();
@@ -41,6 +43,11 @@ public class FlickrRepository {
     public LiveData<List<Album>> getAlbumsWhereId(String id) {
         return albumDao.getAlbumsWhereId(id);
     }
+    public LiveData<List<Album>> getAlbumsOrderTitle() { return allAlbumsOrderedTitle; }
+    public LiveData<List<Album>> getAlbumsWhereIdOrderTitle(String id) {
+        return albumDao.getAlbumsWhereIdOrderTitle(id);
+    }
+
     public int getAlbumCount() { return albumCount; }
     public String getAlbumPhotoCount() { return albumDao.getAlbumPhotoCount(); }
 
@@ -58,6 +65,14 @@ public class FlickrRepository {
     }
     public LiveData<List<Photo>> getPhotosWhereAlbumId(String id) {
         return photoDao.getPhotosWhereAlbumId(id);
+    }
+
+    public LiveData<List<Photo>> getPhotosOrderTitle() { return photoDao.getPhotosOrderTitle(); }
+    public LiveData<List<Photo>> getPhotosWhereIdOrderTitle(String id) {
+        return photoDao.getPhotosWhereIdOrderTitle(id);
+    }
+    public LiveData<List<Photo>> getPhotosWhereAlbumIdOrderTitle(String idAlbum){
+        return photoDao.getPhotosWhereAlbumIdOrderTitle(idAlbum);
     }
 
     public void insert(Album album) {

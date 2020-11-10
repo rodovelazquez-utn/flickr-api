@@ -1,5 +1,6 @@
 package com.example.flickr.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,11 @@ public class FragmentAlbum extends Fragment {
     private AdapterPhotos adapter;
     private GridLayoutManager layoutManager;
     private String albumID;
+    private SharedPreferences sharedPreferences;
+
+    public interface PhotoSelectedListener {
+        void onPhotoSelected(Photo photo);
+    }
 
     public void setAlbumID(String id) {
         albumID = id;
@@ -65,12 +71,25 @@ public class FragmentAlbum extends Fragment {
         // adapter = new AdapterAlbums(getActivity());
         recyclerView.setAdapter(adapter);
 
-        FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumID).observe(getActivity(), new Observer<List<Photo>>() {
-            @Override
-            public void onChanged(List<Photo> photos) {
-                adapter.setPhotos(photos);
-            }
-        });
+        if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+            FlickrApplication.getViewModel().getPhotosWhereAlbumIdOrderTitle(albumID).
+                    observe(getActivity(), new Observer<List<Photo>>() {
+                @Override
+                public void onChanged(List<Photo> photos) {
+                    adapter.setPhotos(photos);
+                }
+            });
+        }
+        else {
+            FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumID).
+                    observe(getActivity(), new Observer<List<Photo>>() {
+                @Override
+                public void onChanged(List<Photo> photos) {
+                    adapter.setPhotos(photos);
+                }
+            });
+        }
+
 
         /*if (adapter.getPhotos() == null){
             // TODO: NO HAY FOTOS
@@ -104,14 +123,15 @@ public class FragmentAlbum extends Fragment {
         recyclerView.scrollToPosition(scrollPosition);
     }
 
+    public void setSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
+
     /*@Override
     public void onStop() {
         super.onStop();
         adapter.setPhotos(null);
     }*/
 
-    public interface PhotoSelectedListener {
-        void onPhotoSelected(Photo photo);
-    }
 
 }

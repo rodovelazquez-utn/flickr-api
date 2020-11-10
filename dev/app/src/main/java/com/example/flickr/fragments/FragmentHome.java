@@ -1,5 +1,6 @@
 package com.example.flickr.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,11 @@ public class FragmentHome extends Fragment {
     private RecyclerView recyclerView;
     private AdapterAlbums adapter;
     private GridLayoutManager layoutManager;
+    private SharedPreferences sharedPreferences;
+
+    public interface AlbumSelectedListener {
+        void onAlbumSelected(Album album);
+    }
 
     public void setAdapter(AdapterAlbums ad) {
         adapter = ad;
@@ -60,12 +66,25 @@ public class FragmentHome extends Fragment {
         // adapter = new AdapterAlbums(getActivity());
         recyclerView.setAdapter(adapter);
 
-        FlickrApplication.getViewModel().getAllAlbums().observe(getActivity(), new Observer<List<Album>>() {
-            @Override
-            public void onChanged(List<Album> albums) {
-                adapter.setAlbums(albums);
-            }
-        });
+        if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+            FlickrApplication.getViewModel().getAlbumsOrderTitle().
+                    observe(getActivity(), new Observer<List<Album>>() {
+                @Override
+                public void onChanged(List<Album> albums) {
+                    adapter.setAlbums(albums);
+                }
+            });
+        }
+        else {
+            FlickrApplication.getViewModel().getAllAlbums().
+                    observe(getActivity(), new Observer<List<Album>>() {
+                @Override
+                public void onChanged(List<Album> albums) {
+                    adapter.setAlbums(albums);
+                }
+            });
+        }
+
 
         FlickrApplication.getDataProvider().loadFlickrAlbums(adapter);
         return rootView;
@@ -95,7 +114,8 @@ public class FragmentHome extends Fragment {
         recyclerView.scrollToPosition(scrollPosition);
     }
 
-    public interface AlbumSelectedListener {
-        void onAlbumSelected(Album album);
+    public void setSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
     }
+
 }
