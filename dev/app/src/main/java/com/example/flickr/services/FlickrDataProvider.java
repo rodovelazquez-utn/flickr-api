@@ -3,13 +3,12 @@ package com.example.flickr.services;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.LiveData;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -77,6 +76,8 @@ public class FlickrDataProvider {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setAlbums(albums);
+                List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
+                adapter.setThumbnails(thumbs);
             }
             else {
                 this.dialogEmptyDB();
@@ -96,6 +97,8 @@ public class FlickrDataProvider {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setAlbums(albums);
+                List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
+                adapter.setThumbnails(thumbs);
 
                 this.getAlbumsFromAPI(); // This already insert the albums in the DB
                 // The adapter's observer should refresh the view with the new albums saved

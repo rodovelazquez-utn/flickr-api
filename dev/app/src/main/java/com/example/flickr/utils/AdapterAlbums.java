@@ -1,6 +1,7 @@
 package com.example.flickr.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     private static final String TAG = "AdapterAlbums";
     private LayoutInflater inflater;
     private List<Album> albums;
+    private List<Bitmap> thumbnails;
     //private List<Album> dataSet;
     FragmentHome.AlbumSelectedListener albumSelectedListener;
 
@@ -44,8 +46,13 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         Log.d(TAG, "Element " + position + " set.");
         if (albums != null){
-            viewHolder.getTextViewTitle().setText(albums.get(position).getAlbumID());
-            viewHolder.getTextViewDescription().setText(albums.get(position).getTitulo());
+            viewHolder.getTextViewTitle().setText(albums.get(position).getTitulo());
+            viewHolder.getTextViewDescription().setText(albums.get(position).getAlbumID());
+        }
+        if (thumbnails != null) {
+            if (thumbnails.get(position) != null) {
+                viewHolder.getImageViewAlbumThumbnail().setImageBitmap(thumbnails.get(position));
+            }
         }
     }
 
@@ -60,6 +67,15 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     public void setAlbums(List<Album> albums) {
         this.albums = albums;
+        notifyDataSetChanged();
+    }
+
+    public List<Bitmap> getThumbnails() {
+        return thumbnails;
+    }
+
+    public void setThumbnails(List<Bitmap> thumbnails) {
+        this.thumbnails = thumbnails;
         notifyDataSetChanged();
     }
 

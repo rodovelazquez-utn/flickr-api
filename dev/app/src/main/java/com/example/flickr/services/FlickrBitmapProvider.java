@@ -13,6 +13,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.bumptech.glide.Glide;
 import com.example.flickr.activities.FlickrApplication;
+import com.example.flickr.fragments.FragmentPhoto;
+import com.example.flickr.model.Album;
 import com.example.flickr.model.Photo;
 
 import java.io.File;
@@ -20,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -44,7 +48,7 @@ public class FlickrBitmapProvider {
         Glide.with(context).load(url).into(imageView);
     }
 
-    public void getBitmapFromUrl(Photo photo){
+    public void getBitmapFromUrl(Photo photo, FragmentPhoto fragmentPhoto){
         ImageLoader imageLoader = FlickrApplication.getImageLoader();
         String url = "https://live.staticflickr.com/" + photo.getServer() + "/"
                 + photo.getPhotoID() + "_" + photo.getSecret() + ".jpg";
@@ -55,8 +59,9 @@ public class FlickrBitmapProvider {
                 // guardar imagen en storage
                 String cad = saveBitmapInternalStorage(response, photo.getPhotoID());
                 Log.d(TAG, "onResponse: RESPUESTA");
-                Bitmap bitmap = loadImageInternalStorage("24729651518");
-                int s = 0;
+                fragmentPhoto.setBitmap(response);
+                //Bitmap bitmap = loadImageInternalStorage("24729651518");
+                //int s = 0;
             }
         }, 0, 0, null, new Response.ErrorListener() {
             @Override
@@ -67,6 +72,7 @@ public class FlickrBitmapProvider {
         FlickrApplication.getSharedQueue().add(request);
 
     }
+
 
     public String saveBitmapInternalStorage(Bitmap bitmap, String photoID) {
         ContextWrapper cw = new ContextWrapper(this.context);
@@ -105,6 +111,34 @@ public class FlickrBitmapProvider {
         return null;
     }
 
+    public List<Bitmap> getThumbnailsFromAPI(List<Album> albums) {
+        Bitmap[] bits = new Bitmap[0];
+        List<Bitmap> bitmaps = Arrays.asList(bits);
+        for (int i = 0; i < albums.size(); i++) {
+
+            Album a = albums.get(i);
+            ImageLoader imageLoader = FlickrApplication.getImageLoader();
+            String url = "https://live.staticflickr.com/" + a.getFirstPhotoServer() + "/"
+                    + a.getFirstPhotoID() + "_" + a.getFirstPhotoSecret() + "_q.jpg";
+
+            ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                @Override
+                public void onResponse(Bitmap response) {
+                    // guardar imagen en storage
+                    bitmaps.add(response);
+                    //String c = saveBitmapInternalStorage(response, a.getFirstPhotoID() + "q");
+                }
+            }, 0, 0, null, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse: ERROR: " + error.getMessage());
+                }
+            });
+            FlickrApplication.getSharedQueue().add(request);
+        }
+
+        return bitmaps;
+    }
 }
 
 

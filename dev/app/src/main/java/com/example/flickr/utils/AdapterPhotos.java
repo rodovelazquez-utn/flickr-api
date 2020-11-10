@@ -1,6 +1,7 @@
 package com.example.flickr.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,24 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
     private static final String TAG = "AdapterPhotos";
     private LayoutInflater inflater;
     private List<Photo> photos;
+    private List<Bitmap> bitmaps;
     FragmentAlbum.PhotoSelectedListener photoSelectedListener;
 
     public List<Photo> getPhotos() {
         return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+        notifyDataSetChanged();
+    }
+
+    public List<Bitmap> getBitmaps() {
+        return bitmaps;
+    }
+
+    public void setBitmaps(List<Bitmap> bitmaps) {
+        this.bitmaps = bitmaps;
     }
 
     public void setOnPhotoSelectedListener(FragmentAlbum.PhotoSelectedListener listener) {
@@ -46,7 +61,12 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         Log.d(TAG, "Element " + position + " set.");
         if (photos != null){
-            viewHolder.getTextViewNumber().setText(photos.get(position).getPhotoID());
+            viewHolder.getTextViewNumber().setText(photos.get(position).getTitle());
+        }
+        if (bitmaps != null) {
+            if (bitmaps.get(position) != null) {
+                viewHolder.getImageViewThumbnail().setImageBitmap(bitmaps.get(position));
+            }
         }
     }
 
@@ -59,10 +79,7 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
         return photos.size();
     }
 
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos;
-        notifyDataSetChanged();
-    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

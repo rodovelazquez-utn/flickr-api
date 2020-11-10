@@ -1,11 +1,11 @@
 package com.example.flickr.fragments;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -72,6 +72,8 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
+                    List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
+                    adapter.setThumbnails(thumbs);
                 }
             });
         }
@@ -81,6 +83,8 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
+                    List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
+                    adapter.setThumbnails(thumbs);
                 }
             });
         }

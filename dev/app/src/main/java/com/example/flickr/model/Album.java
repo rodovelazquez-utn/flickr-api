@@ -36,6 +36,14 @@ public class Album {
     @SerializedName(value = "title")
     private AlbumTitle albumTitle;
 
+    @ColumnInfo(name = "server_primary")
+    @SerializedName(value = "server")
+    private String firstPhotoServer;
+
+    @ColumnInfo(name = "secret_primary")
+    @SerializedName(value = "secret")
+    private String firstPhotoSecret;
+
     public Album(){
 
     }
@@ -87,5 +95,21 @@ public class Album {
 
     public void setAlbumCount(String albumCount) {
         this.albumCount = albumCount;
+    }
+
+    public String getFirstPhotoServer() {
+        return firstPhotoServer;
+    }
+
+    public void setFirstPhotoServer(String firstPhotoServer) {
+        this.firstPhotoServer = firstPhotoServer;
+    }
+
+    public String getFirstPhotoSecret() {
+        return firstPhotoSecret;
+    }
+
+    public void setFirstPhotoSecret(String firstPhotoSecret) {
+        this.firstPhotoSecret = firstPhotoSecret;
     }
 }
