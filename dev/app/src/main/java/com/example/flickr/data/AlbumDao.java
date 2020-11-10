@@ -24,6 +24,9 @@ public interface AlbumDao {
     @Query("SELECT * FROM album_table WHERE id_album = :id ORDER BY title")
     LiveData<List<Album>> getAlbumsWhereIdOrderTitle(String id);
 
+    @Query("SELECT COUNT(*) FROM album_table WHERE id_album = :id")
+    int getAlbumsCountWhereId(String id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Album album);
 

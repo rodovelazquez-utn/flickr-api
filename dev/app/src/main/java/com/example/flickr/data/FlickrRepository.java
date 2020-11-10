@@ -50,6 +50,9 @@ public class FlickrRepository {
 
     public int getAlbumCount() { return albumCount; }
     public String getAlbumPhotoCount() { return albumDao.getAlbumPhotoCount(); }
+    public int getAlbumsCountWhereId(String albumID) {
+        return albumDao.getAlbumsCountWhereId(albumID);
+    }
 
     public LiveData<List<Comment>> getAllComments() {
         return allComments;
@@ -73,6 +76,14 @@ public class FlickrRepository {
     }
     public LiveData<List<Photo>> getPhotosWhereAlbumIdOrderTitle(String idAlbum){
         return photoDao.getPhotosWhereAlbumIdOrderTitle(idAlbum);
+    }
+
+    public int getPhotoCountWhereId(String albumID) {
+        return photoDao.getPhotoCountWhereId(albumID);
+    }
+
+    public int getCommentCountWhereId(String photoID) {
+        return commentDao.getCommentCountWhereId(photoID);
     }
 
     public void insert(Album album) {

@@ -30,6 +30,9 @@ public interface PhotoDao {
     @Query("SELECT * FROM photo_table WHERE id_album = :idAlbum ORDER BY title ASC")
     LiveData<List<Photo>> getPhotosWhereAlbumIdOrderTitle(String idAlbum);
 
+    @Query("SELECT COUNT(*) FROM photo_table WHERE id_album = :id")
+    int getPhotoCountWhereId(String id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Photo photo);
 

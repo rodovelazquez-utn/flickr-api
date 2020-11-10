@@ -21,6 +21,9 @@ public interface CommentDao {
     @Query("SELECT * FROM comment_table WHERE id_photo = :idPhoto")
     LiveData<List<Comment>> getCommentsWhereIdPhoto(String idPhoto);
 
+    @Query("SELECT COUNT(*) FROM comment_table WHERE id_photo = :id")
+    int getCommentCountWhereId(String id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Comment comment);
 

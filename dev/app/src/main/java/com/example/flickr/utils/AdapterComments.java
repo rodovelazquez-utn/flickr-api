@@ -50,7 +50,11 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (comments == null){
+            Log.d(TAG, "getItemCount: COMMENTS IS NULL");
+            return 0;
+        }
+        return comments.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

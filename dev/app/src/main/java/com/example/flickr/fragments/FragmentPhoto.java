@@ -68,7 +68,7 @@ public class FragmentPhoto extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         imageViewPhoto = container.findViewById(R.id.imageViewPhoto);
-        if (bitmap != null) {
+        if (bitmap != null && imageViewPhoto != null) {
             imageViewPhoto.setImageBitmap(bitmap);
         }
 

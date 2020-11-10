@@ -44,6 +44,10 @@ public class FlickrViewModel extends AndroidViewModel {
         return albumCount;
     }
 
+    public int getAlbumsCountWhereId(String albumID) {
+        return repository.getAlbumsCountWhereId(albumID);
+    }
+
     public String getAlbumPhotoCount() { return repository.getAlbumPhotoCount(); }
 
     public LiveData<List<Comment>> getAllComments() {
@@ -81,6 +85,14 @@ public class FlickrViewModel extends AndroidViewModel {
     }
     public LiveData<List<Photo>> getPhotosWhereAlbumIdOrderTitle(String idAlbum){
         return repository.getPhotosWhereAlbumIdOrderTitle(idAlbum);
+    }
+
+    public int getPhotoCountWhereId(String albumID) {
+        return repository.getPhotoCountWhereId(albumID);
+    }
+
+    public int getCommentCountWhereId(String photoID) {
+        return repository.getCommentCountWhereId(photoID);
     }
 
     public void insert(Album album) {
