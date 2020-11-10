@@ -72,8 +72,6 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
-                    List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
-                    adapter.setThumbnails(thumbs);
                 }
             });
         }
@@ -83,8 +81,6 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
-                    List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
-                    adapter.setThumbnails(thumbs);
                 }
             });
         }

@@ -111,34 +111,6 @@ public class FlickrBitmapProvider {
         return null;
     }
 
-    public List<Bitmap> getThumbnailsFromAPI(List<Album> albums) {
-        Bitmap[] bits = new Bitmap[0];
-        List<Bitmap> bitmaps = Arrays.asList(bits);
-        for (int i = 0; i < albums.size(); i++) {
-
-            Album a = albums.get(i);
-            ImageLoader imageLoader = FlickrApplication.getImageLoader();
-            String url = "https://live.staticflickr.com/" + a.getFirstPhotoServer() + "/"
-                    + a.getFirstPhotoID() + "_" + a.getFirstPhotoSecret() + "_q.jpg";
-
-            ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap response) {
-                    // guardar imagen en storage
-                    bitmaps.add(response);
-                    //String c = saveBitmapInternalStorage(response, a.getFirstPhotoID() + "q");
-                }
-            }, 0, 0, null, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse: ERROR: " + error.getMessage());
-                }
-            });
-            FlickrApplication.getSharedQueue().add(request);
-        }
-
-        return bitmaps;
-    }
 }
 
 

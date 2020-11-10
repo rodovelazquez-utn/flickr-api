@@ -76,8 +76,6 @@ public class FlickrDataProvider {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setAlbums(albums);
-                List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
-                adapter.setThumbnails(thumbs);
             }
             else {
                 this.dialogEmptyDB();
@@ -97,8 +95,6 @@ public class FlickrDataProvider {
                     // TODO: throw new NotFoundException("Albums NOT FOUND");
                 }
                 adapter.setAlbums(albums);
-                List<Bitmap> thumbs = FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums);
-                adapter.setThumbnails(thumbs);
 
                 this.getAlbumsFromAPI(); // This already insert the albums in the DB
                 // The adapter's observer should refresh the view with the new albums saved
