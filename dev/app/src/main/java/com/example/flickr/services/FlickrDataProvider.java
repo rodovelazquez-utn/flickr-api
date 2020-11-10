@@ -18,6 +18,7 @@ import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.model.Album;
 import com.example.flickr.model.Photo;
 import com.example.flickr.utils.AdapterAlbums;
+import com.example.flickr.utils.AdapterComments;
 import com.example.flickr.utils.AdapterPhotos;
 import com.google.gson.Gson;
 
@@ -155,6 +156,10 @@ public class FlickrDataProvider {
             }
         }
 
+    }
+
+    public void loadFlickrComments(AdapterComments adapter, String photoID) {
+        Log.d(TAG, "loadFlickrComments: COMENTARIOS POR CARGAR");
     }
 
     private void dialogEmptyDB(){

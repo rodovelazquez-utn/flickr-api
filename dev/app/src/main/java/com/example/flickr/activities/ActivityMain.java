@@ -132,9 +132,12 @@ public class ActivityMain extends AppCompatActivity implements
         Log.d(TAG, "onPhotoSelected: Here the fragment is replaced");
 
         FragmentPhoto fragPhoto = new FragmentPhoto();
+        fragPhoto.setFragmentManager(fragManager);
+        fragPhoto.setFrameLayout(frameLayoutFragments);
+        fragPhoto.setPhoto(photo);
         FlickrApplication.getBitmapProvider().getBitmapFromUrl(photo, fragPhoto);
         //fragPhoto.setBitmap();
-        FragmentComments fragComments = new FragmentComments();
+        //FragmentComments fragComments = new FragmentComments();
         //fragComments.setAdapter(new AdapterComments(this));
 
         FragmentTransaction fragTransaction = fragManager.beginTransaction();
