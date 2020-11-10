@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.bumptech.glide.Glide;
 import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.model.Photo;
@@ -37,70 +39,70 @@ public class FlickrBitmapProvider {
 
     public void getBitmap(Context context, ImageView imageView) {
         String url = "https://live.staticflickr.com/1846/29828429307_53193e91e1.jpg";
+        // 25785688184;
 
         Glide.with(context).load(url).into(imageView);
     }
 
-    public Bitmap getBitmapFromUrl(Photo photo){
+    public void getBitmapFromUrl(Photo photo){
         ImageLoader imageLoader = FlickrApplication.getImageLoader();
-        //String url = "https://live.staticflickr.com/" + photo.getServer() + "/"
-        //        + photo.getPhotoID() + "_" + photo.getSecret() + "_" + "b" + ".jpg";
-
         String url = "https://live.staticflickr.com/" + photo.getServer() + "/"
                 + photo.getPhotoID() + "_" + photo.getSecret() + ".jpg";
 
-        final Bitmap[] bit = {null};
-
-        imageLoader.get(url, new ImageLoader.ImageListener() {
+        ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null) {
-                    Log.d(TAG, "onResponse: Funciona");
-                    Bitmap b = response.getBitmap();
-                    bit[0] = b;
-                }
+            public void onResponse(Bitmap response) {
+                // guardar imagen en storage
+                String cad = saveBitmapInternalStorage(response, photo.getPhotoID());
+                Log.d(TAG, "onResponse: RESPUESTA");
+                Bitmap bitmap = loadImageInternalStorage("24729651518");
+                int s = 0;
             }
-
+        }, 0, 0, null, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: ERROR: " + error.getMessage());
             }
         });
+        FlickrApplication.getSharedQueue().add(request);
 
-        return bit[0];
     }
 
-    public void saveBitmapInternalStorage(Bitmap bitmap, String photoID) {
+    public String saveBitmapInternalStorage(Bitmap bitmap, String photoID) {
         ContextWrapper cw = new ContextWrapper(this.context);
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File directory = cw.getDir("Pictures", Context.MODE_PRIVATE);
         File mypath = new File(directory,photoID.toString() + ".jpg");
 
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         } catch (Exception e) {
             e.printStackTrace();
         }
         finally {
             try {
                 fos.close();
+
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return directory.getAbsolutePath();
     }
 
-    public void loadImageInternalStorage(String photoID, ImageView imageView) {
+    public Bitmap loadImageInternalStorage(String photoID) {
         try {
-            File f = new File(photoID);
+            File f = new File("/data/user/0/com.example.flickr/app_Pictures/" + photoID + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            imageView.setImageBitmap(b);
+            //imageView.setImageBitmap(b);
+            return  b;
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 }

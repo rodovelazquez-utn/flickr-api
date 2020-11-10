@@ -131,7 +131,7 @@ public class ActivityMain extends AppCompatActivity implements
     public void onPhotoSelected(Photo photo) {
         Log.d(TAG, "onPhotoSelected: Here the fragment is replaced");
 
-        Bitmap b = FlickrApplication.getBitmapProvider().getBitmapFromUrl(photo);
+        FlickrApplication.getBitmapProvider().getBitmapFromUrl(photo);
 
         //FragmentViewpager fragViewpager = new FragmentViewpager();
         fragmentViewPager.setAdapter(new ViewpagerAdapter(fragManager));
