@@ -1,5 +1,6 @@
 package com.example.flickr.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -91,7 +92,7 @@ public class FragmentPhoto extends Fragment {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Opciones");
         menu.add(0, v.getId(), 0, "Ver comentarios");
-        menu.add(0, v.getId(), 0, "Enviar url por mail");
+        menu.add(0, v.getId(), 1, "Enviar url por mail");
     }
 
     @Override
@@ -108,7 +109,13 @@ public class FragmentPhoto extends Fragment {
                     "CommentFragment").commit();
         }
         if (item.getTitle().toString().equals("Enviar url por mail")) {
-
+            String url = "https://live.staticflickr.com/" + photo.getServer() + "/"
+                    + photo.getPhotoID() + "_" + photo.getSecret() + ".jpg";
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Foto de Flickr");
+            intent.putExtra(Intent.EXTRA_TEXT, "url: " + url);
+            startActivity(Intent.createChooser(intent, "Enviar Email"));
         }
         return true;
     }
