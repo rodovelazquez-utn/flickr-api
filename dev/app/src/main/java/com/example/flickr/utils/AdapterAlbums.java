@@ -22,8 +22,19 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     private static final String TAG = "AdapterAlbums";
     private LayoutInflater inflater;
+
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
     private List<Album> albums;
     private List<Bitmap> thumbnails;
+
+    public void setHasImagesToShow(boolean hasImagesToShow) {
+        this.hasImagesToShow = hasImagesToShow;
+    }
+
+    private boolean hasImagesToShow;
     //private List<Album> dataSet;
     FragmentHome.AlbumSelectedListener albumSelectedListener;
 
@@ -33,6 +44,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     public AdapterAlbums(Context context){
         inflater = LayoutInflater.from(context);
+        hasImagesToShow = false;
     }
 
     @NonNull
@@ -49,10 +61,11 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
             viewHolder.getTextViewTitle().setText(albums.get(position).getTitulo());
             viewHolder.getTextViewDescription().setText(albums.get(position).getAlbumID());
         }
-        if (thumbnails != null) {
-            if (thumbnails.get(position) != null) {
-                viewHolder.getImageViewAlbumThumbnail().setImageBitmap(thumbnails.get(position));
-            }
+        if (!hasImagesToShow) {
+            viewHolder.getImageViewAlbumThumbnail().setImageResource(R.mipmap.loading_image);
+        }
+        else {
+            viewHolder.getImageViewAlbumThumbnail().setImageBitmap(thumbnails.get(position));
         }
     }
 

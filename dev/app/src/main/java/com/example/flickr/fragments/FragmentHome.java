@@ -81,11 +81,14 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
+                    if (!(albums.size() < 19)) {
+                        FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums, sharedPreferences, adapter);
+                        //adapter.setThumbnails(bitmaps);
+                        //adapter.setHasImagesToShow(true);
+                    }
                 }
             });
         }
-
-
         FlickrApplication.getDataProvider().loadFlickrAlbums(adapter);
         return rootView;
     }
