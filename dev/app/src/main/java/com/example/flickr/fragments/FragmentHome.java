@@ -72,6 +72,14 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
+                    if (!(albums.size() < 19) && !adapter.getThumbnailsReceived()) {
+                        FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums, sharedPreferences, adapter);
+                        //adapter.setThumbnails(bitmaps);
+                        //adapter.setHasImagesToShow(true);
+                    }
+                    if (adapter.getThumbnailsReceived()) {
+                        adapter.searchAlbumsThumbnails();
+                    }
                 }
             });
         }
@@ -81,10 +89,13 @@ public class FragmentHome extends Fragment {
                 @Override
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
-                    if (!(albums.size() < 19)) {
+                    if (!(albums.size() < 19) && !adapter.getThumbnailsReceived()) {
                         FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums, sharedPreferences, adapter);
                         //adapter.setThumbnails(bitmaps);
                         //adapter.setHasImagesToShow(true);
+                    }
+                    if (adapter.getThumbnailsReceived()) {
+                        adapter.searchAlbumsThumbnails();
                     }
                 }
             });

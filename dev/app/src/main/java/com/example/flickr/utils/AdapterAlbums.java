@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flickr.R;
+import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.fragments.FragmentHome;
 import com.example.flickr.model.Album;
 
@@ -35,6 +36,17 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     }
 
     private boolean hasImagesToShow;
+
+    private boolean thumbnailsReceived;
+
+    public void setThumbnailsReceived(boolean thumbnailsReceived) {
+        this.thumbnailsReceived = thumbnailsReceived;
+    }
+
+    public boolean getThumbnailsReceived() {
+        return thumbnailsReceived;
+    }
+
     //private List<Album> dataSet;
     FragmentHome.AlbumSelectedListener albumSelectedListener;
 
@@ -45,6 +57,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     public AdapterAlbums(Context context){
         inflater = LayoutInflater.from(context);
         hasImagesToShow = false;
+        thumbnailsReceived = false;
     }
 
     @NonNull
@@ -65,7 +78,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
             viewHolder.getImageViewAlbumThumbnail().setImageResource(R.mipmap.loading_image);
         }
         else {
-            viewHolder.getImageViewAlbumThumbnail().setImageBitmap(thumbnails.get(position));
+            viewHolder.getImageViewAlbumThumbnail().setImageBitmap(albums.get(position).getThumbnail());
         }
     }
 
@@ -89,6 +102,16 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     public void setThumbnails(List<Bitmap> thumbnails) {
         this.thumbnails = thumbnails;
+        notifyDataSetChanged();
+    }
+
+    public void searchAlbumsThumbnails() {
+        for (int i = 0; i < albums.size(); i++) {
+            Bitmap image = FlickrApplication.getBitmapProvider()
+                    .loadImageFromInternalStorage(albums.get(i).getFirstPhotoID()+"_AlbumThumb_q");
+            albums.get(i).setThumbnail(image);
+        }
+        hasImagesToShow = true;
         notifyDataSetChanged();
     }
 

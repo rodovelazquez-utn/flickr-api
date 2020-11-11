@@ -20,6 +20,7 @@ import com.example.flickr.fragments.FragmentPhoto;
 import com.example.flickr.model.Album;
 import com.example.flickr.model.Photo;
 import com.example.flickr.utils.AdapterAlbums;
+import com.google.gson.internal.$Gson$Preconditions;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -127,18 +128,19 @@ public class FlickrBitmapProvider {
             primarySecrets[i] = albums.get(i).getFirstPhotoSecret();
         }
 
+        List<Album> sortedAlbums;
         if (sharedPreferences.getString("order_field", "id").equals("name_asc")) {
-            albums = this.sortAlbumsByName(albums);
+            sortedAlbums = this.sortAlbumsByName(albums);
         }
         else {
-            albums = this.sortAlbumsById(albums);
+            sortedAlbums = this.sortAlbumsById(albums);
         }
 
         // Albums are now sorted
-        Bitmap[] bitmaps = new Bitmap[albums.size()];
+        //Bitmap[] bitmaps = new Bitmap[sortedAlbums.size()];
 
-        for (int i = 0; i < albums.size(); i++) {
-            Album a = albums.get(i);
+        for (int i = 0; i < sortedAlbums.size(); i++) {
+            Album a = sortedAlbums.get(i);
             ImageLoader imageLoader = FlickrApplication.getImageLoader();
             String url = "https://live.staticflickr.com/" + a.getFirstPhotoServer() + "/"
                     + a.getFirstPhotoID() + "_" + a.getFirstPhotoSecret() + "_q.jpg";
@@ -160,9 +162,14 @@ public class FlickrBitmapProvider {
         }
 
         if (bitmapsAlbums[18] != null) {
-            List<Bitmap> lista = Arrays.asList(bitmapsAlbums);
-            ada.setThumbnails(lista);
-            ada.setHasImagesToShow(true);
+            for (int i = 0; i < sortedAlbums.size(); i++) {
+                saveThumbnailToInternalStorage(sortedAlbums.get(i).getFirstPhotoID(), bitmapsAlbums[i]);
+                //ada.getAlbums().get(i).setThumbnail(bitmapsAlbums[i]);
+            }
+            ada.searchAlbumsThumbnails();
+            ada.setThumbnailsReceived(true);
+            //ada.setHasImagesToShow(true);
+            //ada.notifyDataSetChanged();
         }
         //return Arrays.asList(bitmapsAlbums);
     }
@@ -202,6 +209,29 @@ public class FlickrBitmapProvider {
         }
 
         return albums;
+    }
+
+    private void saveThumbnailToInternalStorage(String photoID, Bitmap bitmap) {
+        ContextWrapper cw = new ContextWrapper(this.context);
+        File directory = cw.getDir("Pictures", Context.MODE_PRIVATE);
+        File mypath = new File(directory,photoID.toString() + "_AlbumThumb_q.jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                fos.close();
+
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

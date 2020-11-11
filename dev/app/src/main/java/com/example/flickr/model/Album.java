@@ -1,5 +1,7 @@
 package com.example.flickr.model;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -43,6 +45,9 @@ public class Album {
     @ColumnInfo(name = "secret_primary")
     @SerializedName(value = "secret")
     private String firstPhotoSecret;
+
+    @Ignore
+    private Bitmap thumbnail;
 
     public Album(){
 
@@ -111,5 +116,13 @@ public class Album {
 
     public void setFirstPhotoSecret(String firstPhotoSecret) {
         this.firstPhotoSecret = firstPhotoSecret;
+    }
+
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
