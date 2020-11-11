@@ -12,7 +12,8 @@
 
         <ImageView android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:id="@+id/imageViewAlbumThumbnail">
+            android:id="@+id/imageViewAlbumThumbnail"
+            android:layout_marginTop="4dp">
 
         </ImageView>
 
@@ -20,12 +21,12 @@
             android:id="@+id/textViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Titulo"
-            android:textSize="20sp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:text="Titulo"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textViewDescription"
@@ -34,7 +35,8 @@
             android:text="Descripcion"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:textSize="10sp"/>
 
     </LinearLayout>
 

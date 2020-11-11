@@ -1,9 +1,12 @@
 package com.example.flickr.model;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
@@ -32,6 +35,9 @@ public class Photo {
     @ColumnInfo(name = "server")
     @SerializedName(value = "server")
     private String server;
+
+    @Ignore
+    private Bitmap thumbnail;
 
     public Photo(){
 
@@ -76,5 +82,13 @@ public class Photo {
 
     public void setServer(String server) {
         this.server = server;
+    }
+
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

@@ -21,7 +21,19 @@ public interface PhotoDao {
     @Query("SELECT * FROM photo_table WHERE id_album = :idAlbum ORDER BY id_photo")
     LiveData<List<Photo>> getPhotosWhereAlbumId(String idAlbum);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Query("SELECT * FROM photo_table ORDER BY title ASC")
+    LiveData<List<Photo>> getPhotosOrderTitle();
+
+    @Query("SELECT * FROM photo_table WHERE id_photo = :id ORDER BY title ASC")
+    LiveData<List<Photo>> getPhotosWhereIdOrderTitle(String id);
+
+    @Query("SELECT * FROM photo_table WHERE id_album = :idAlbum ORDER BY title ASC")
+    LiveData<List<Photo>> getPhotosWhereAlbumIdOrderTitle(String idAlbum);
+
+    @Query("SELECT COUNT(*) FROM photo_table WHERE id_album = :id")
+    int getPhotoCountWhereId(String id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Photo photo);
 
     @Query("DELETE FROM photo_table")

@@ -1,5 +1,6 @@
 package com.example.flickr.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,21 @@ public class FragmentAlbum extends Fragment {
     private AdapterPhotos adapter;
     private GridLayoutManager layoutManager;
     private String albumID;
+    private SharedPreferences sharedPreferences;
+    private Album album;
+    private boolean thumbnailsSearched;
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public void setThumbnailsSearched(boolean thumbnailsSearched) {
+        this.thumbnailsSearched = thumbnailsSearched;
+    }
+
+    public interface PhotoSelectedListener {
+        void onPhotoSelected(Photo photo);
+    }
 
     public void setAlbumID(String id) {
         albumID = id;
@@ -43,6 +59,7 @@ public class FragmentAlbum extends Fragment {
     }
 
     public FragmentAlbum() {
+        thumbnailsSearched = false;
         // Required empty public constructor
     }
 
@@ -65,12 +82,44 @@ public class FragmentAlbum extends Fragment {
         // adapter = new AdapterAlbums(getActivity());
         recyclerView.setAdapter(adapter);
 
-        FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumID).observe(getActivity(), new Observer<List<Photo>>() {
-            @Override
-            public void onChanged(List<Photo> photos) {
-                adapter.setPhotos(photos);
-            }
-        });
+        if (sharedPreferences.getString("order_field", "id").equals("name_asc")){
+            FlickrApplication.getViewModel().getPhotosWhereAlbumIdOrderTitle(albumID).
+                    observe(getActivity(), new Observer<List<Photo>>() {
+                @Override
+                public void onChanged(List<Photo> photos) {
+                    adapter.setPhotos(photos);
+                    if (!(photos.size() < Integer.parseInt(album.getAlbumCount()))
+                            && !adapter.getThumbnailsReceived()) {
+                        buscarThumbnails(photos);
+                        //adapter.setThumbnails(bitmaps);
+                        //adapter.setHasImagesToShow(true);
+                    }
+                    if (adapter.getThumbnailsReceived()) {
+                        adapter.searchPhotosThumbnails();
+                    }
+                }
+            });
+        }
+        else {
+            FlickrApplication.getViewModel().getPhotosWhereAlbumId(albumID).
+                    observe(getActivity(), new Observer<List<Photo>>() {
+                @Override
+                public void onChanged(List<Photo> photos) {
+                    adapter.setPhotos(photos);
+                    if (!(photos.size() < Integer.parseInt(album.getAlbumCount()))
+                            && !adapter.getThumbnailsReceived()) {
+                        buscarThumbnails(photos);
+                        //FlickrApplication.getBitmapProvider().getPhotosThumbnailsFromAPI(photos, sharedPreferences, adapter);
+                        //adapter.setThumbnails(bitmaps);
+                        //adapter.setHasImagesToShow(true);
+                    }
+                    if (adapter.getThumbnailsReceived()) {
+                        adapter.searchPhotosThumbnails();
+                    }
+                }
+            });
+        }
+
 
         /*if (adapter.getPhotos() == null){
             // TODO: NO HAY FOTOS
@@ -83,6 +132,17 @@ public class FragmentAlbum extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void buscarThumbnails(List<Photo> photos) {
+        if (!thumbnailsSearched) {
+            FlickrApplication.getBitmapProvider().getPhotoThumbnails(photos, sharedPreferences,
+                    adapter, Integer.parseInt(album.getAlbumCount()));
+            thumbnailsSearched = true;
+        }
+        if (adapter.getThumbnailsReceived() && adapter.getHasImagesToShow()) {
+            adapter.searchPhotosThumbnails();
+        }
     }
 
     public void setOnPhotoSelectedListener(PhotoSelectedListener listener){
@@ -104,14 +164,15 @@ public class FragmentAlbum extends Fragment {
         recyclerView.scrollToPosition(scrollPosition);
     }
 
+    public void setSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
+
     /*@Override
     public void onStop() {
         super.onStop();
         adapter.setPhotos(null);
     }*/
 
-    public interface PhotoSelectedListener {
-        void onPhotoSelected(Photo photo);
-    }
 
 }

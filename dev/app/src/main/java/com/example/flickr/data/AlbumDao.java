@@ -18,7 +18,16 @@ public interface AlbumDao {
     @Query("SELECT * FROM album_table WHERE id_album = :id ORDER BY id_album")
     LiveData<List<Album>> getAlbumsWhereId(String id);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Query("SELECT * FROM album_table ORDER BY title")
+    LiveData<List<Album>> getAlbumsOrderTitle();
+
+    @Query("SELECT * FROM album_table WHERE id_album = :id ORDER BY title")
+    LiveData<List<Album>> getAlbumsWhereIdOrderTitle(String id);
+
+    @Query("SELECT COUNT(*) FROM album_table WHERE id_album = :id")
+    int getAlbumsCountWhereId(String id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Album album);
 
     @Query("DELETE FROM album_table")
