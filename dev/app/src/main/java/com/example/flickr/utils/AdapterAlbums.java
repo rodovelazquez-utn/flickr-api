@@ -35,8 +35,11 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
         this.hasImagesToShow = hasImagesToShow;
     }
 
-    private boolean hasImagesToShow;
+    public boolean getHasImagesToShow() {
+        return hasImagesToShow;
+    }
 
+    private boolean hasImagesToShow;
     private boolean thumbnailsReceived;
 
     public void setThumbnailsReceived(boolean thumbnailsReceived) {
@@ -108,7 +111,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     public void searchAlbumsThumbnails() {
         for (int i = 0; i < albums.size(); i++) {
             Bitmap image = FlickrApplication.getBitmapProvider()
-                    .loadImageFromInternalStorage(albums.get(i).getFirstPhotoID()+"_AlbumThumb_q");
+                    .loadImageFromInternalStorage(albums.get(i).getFirstPhotoID()+"_q");
             albums.get(i).setThumbnail(image);
         }
         hasImagesToShow = true;

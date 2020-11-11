@@ -83,6 +83,7 @@ public class ActivityMain extends AppCompatActivity implements
         createViewModelTask.setViewModelStoreOwner(this);
         ExecutorService executor = Executors.newFixedThreadPool(3);
         executor.execute(createViewModelTask);
+        FlickrApplication.getBitmapProvider().setExecutor(executor);
 
         // onCreate() method continues after creating the FlickrViewModel
     }
@@ -115,8 +116,11 @@ public class ActivityMain extends AppCompatActivity implements
 
     @Override
     public void onAlbumSelected(Album album) {
+        int a = Integer.parseInt(album.getAlbumCount());
+        FlickrApplication.getBitmapProvider().setPhotoCount(Integer.parseInt(album.getAlbumCount()));
         Log.d(TAG, "onAlbumSelected: Here the fragment is replaced");
         FragmentAlbum fragmentAlbum = new FragmentAlbum();
+        fragmentAlbum.setAlbum(album);
         fragmentAlbum.setSharedPreferences(sharedPreferences);
         fragmentAlbum.setAdapter(new AdapterPhotos(this));
         fragmentAlbum.setAlbumID(album.getAlbumID());

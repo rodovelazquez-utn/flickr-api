@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flickr.R;
+import com.example.flickr.activities.FlickrApplication;
 import com.example.flickr.fragments.FragmentAlbum;
 import com.example.flickr.model.Photo;
 
@@ -24,6 +25,25 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
     private List<Photo> photos;
     private List<Bitmap> bitmaps;
     FragmentAlbum.PhotoSelectedListener photoSelectedListener;
+
+    public void setHasImagesToShow(boolean hasImagesToShow) {
+        this.hasImagesToShow = hasImagesToShow;
+    }
+
+    private boolean hasImagesToShow;
+    private boolean thumbnailsReceived;
+
+    public void setThumbnailsReceived(boolean thumbnailsReceived) {
+        this.thumbnailsReceived = thumbnailsReceived;
+    }
+
+    public boolean getHasImagesToShow() {
+        return hasImagesToShow;
+    }
+
+    public boolean getThumbnailsReceived() {
+        return thumbnailsReceived;
+    }
 
     public List<Photo> getPhotos() {
         return photos;
@@ -48,6 +68,8 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
 
     public AdapterPhotos(Context context) {
         inflater = LayoutInflater.from(context);
+        hasImagesToShow = false;
+        thumbnailsReceived = false;
     }
 
     @NonNull
@@ -64,11 +86,18 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
             viewHolder.getTextViewNumber().setText(photos.get(position).getTitle());
             viewHolder.getTextViewIdPhoto().setText(photos.get(position).getPhotoID());
         }
-        if (bitmaps != null) {
+        if (!hasImagesToShow) {
+            viewHolder.getImageViewThumbnail().setImageResource(R.mipmap.loading_image);
+        }
+        else {
+            viewHolder.getImageViewThumbnail().setImageBitmap(photos.get(position).getThumbnail());
+        }
+        /*if (bitmaps != null) {
             if (bitmaps.get(position) != null) {
+                searchPhotosThumbnails();
                 viewHolder.getImageViewThumbnail().setImageBitmap(bitmaps.get(position));
             }
-        }
+        }*/
     }
 
     @Override
@@ -80,6 +109,16 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
         return photos.size();
     }
 
+
+    public void searchPhotosThumbnails() {
+        for (int i = 0; i < photos.size(); i++) {
+            Bitmap image = FlickrApplication.getBitmapProvider()
+                    .loadImageFromInternalStorage(photos.get(i).getPhotoID()+"_q");
+            photos.get(i).setThumbnail(image);
+        }
+        hasImagesToShow = true;
+        notifyDataSetChanged();
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

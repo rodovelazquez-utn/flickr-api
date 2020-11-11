@@ -1,7 +1,6 @@
 package com.example.flickr.fragments;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,6 +33,7 @@ public class FragmentHome extends Fragment {
     private AdapterAlbums adapter;
     private GridLayoutManager layoutManager;
     private SharedPreferences sharedPreferences;
+    private boolean thumbnailsSearched;
 
     public interface AlbumSelectedListener {
         void onAlbumSelected(Album album);
@@ -44,6 +44,7 @@ public class FragmentHome extends Fragment {
     }
 
     public FragmentHome() {
+        thumbnailsSearched = false;
         // Required empty public constructor
     }
 
@@ -73,7 +74,7 @@ public class FragmentHome extends Fragment {
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
                     if (!(albums.size() < 19) && !adapter.getThumbnailsReceived()) {
-                        FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums, sharedPreferences, adapter);
+                        buscarThumbnails(albums);
                         //adapter.setThumbnails(bitmaps);
                         //adapter.setHasImagesToShow(true);
                     }
@@ -90,7 +91,7 @@ public class FragmentHome extends Fragment {
                 public void onChanged(List<Album> albums) {
                     adapter.setAlbums(albums);
                     if (!(albums.size() < 19) && !adapter.getThumbnailsReceived()) {
-                        FlickrApplication.getBitmapProvider().getThumbnailsFromAPI(albums, sharedPreferences, adapter);
+                        buscarThumbnails(albums);
                         //adapter.setThumbnails(bitmaps);
                         //adapter.setHasImagesToShow(true);
                     }
@@ -107,6 +108,16 @@ public class FragmentHome extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void buscarThumbnails(List<Album> albums) {
+        if (!thumbnailsSearched) {
+            FlickrApplication.getBitmapProvider().getAlbumThumbnails(albums, sharedPreferences, adapter);
+            thumbnailsSearched = true;
+        }
+        if (adapter.getThumbnailsReceived() && adapter.getHasImagesToShow()) {
+            adapter.searchAlbumsThumbnails();
+        }
     }
 
     public void setOnAlbumSelectedListener(AlbumSelectedListener listener){

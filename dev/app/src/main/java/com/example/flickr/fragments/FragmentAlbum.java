@@ -35,6 +35,16 @@ public class FragmentAlbum extends Fragment {
     private GridLayoutManager layoutManager;
     private String albumID;
     private SharedPreferences sharedPreferences;
+    private Album album;
+    private boolean thumbnailsSearched;
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public void setThumbnailsSearched(boolean thumbnailsSearched) {
+        this.thumbnailsSearched = thumbnailsSearched;
+    }
 
     public interface PhotoSelectedListener {
         void onPhotoSelected(Photo photo);
@@ -49,6 +59,7 @@ public class FragmentAlbum extends Fragment {
     }
 
     public FragmentAlbum() {
+        thumbnailsSearched = false;
         // Required empty public constructor
     }
 
@@ -77,6 +88,15 @@ public class FragmentAlbum extends Fragment {
                 @Override
                 public void onChanged(List<Photo> photos) {
                     adapter.setPhotos(photos);
+                    if (!(photos.size() < Integer.parseInt(album.getAlbumCount()))
+                            && !adapter.getThumbnailsReceived()) {
+                        buscarThumbnails(photos);
+                        //adapter.setThumbnails(bitmaps);
+                        //adapter.setHasImagesToShow(true);
+                    }
+                    if (adapter.getThumbnailsReceived()) {
+                        adapter.searchPhotosThumbnails();
+                    }
                 }
             });
         }
@@ -86,6 +106,16 @@ public class FragmentAlbum extends Fragment {
                 @Override
                 public void onChanged(List<Photo> photos) {
                     adapter.setPhotos(photos);
+                    if (!(photos.size() < Integer.parseInt(album.getAlbumCount()))
+                            && !adapter.getThumbnailsReceived()) {
+                        buscarThumbnails(photos);
+                        //FlickrApplication.getBitmapProvider().getPhotosThumbnailsFromAPI(photos, sharedPreferences, adapter);
+                        //adapter.setThumbnails(bitmaps);
+                        //adapter.setHasImagesToShow(true);
+                    }
+                    if (adapter.getThumbnailsReceived()) {
+                        adapter.searchPhotosThumbnails();
+                    }
                 }
             });
         }
@@ -102,6 +132,17 @@ public class FragmentAlbum extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void buscarThumbnails(List<Photo> photos) {
+        if (!thumbnailsSearched) {
+            FlickrApplication.getBitmapProvider().getPhotoThumbnails(photos, sharedPreferences,
+                    adapter, Integer.parseInt(album.getAlbumCount()));
+            thumbnailsSearched = true;
+        }
+        if (adapter.getThumbnailsReceived() && adapter.getHasImagesToShow()) {
+            adapter.searchPhotosThumbnails();
+        }
     }
 
     public void setOnPhotoSelectedListener(PhotoSelectedListener listener){
