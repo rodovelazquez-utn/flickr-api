@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +33,8 @@ public class FragmentPhoto extends Fragment {
 
     private ImageView imageViewPhoto;
     private Bitmap bitmap;
+    private ImageButton imageButtonComments;
+    private ImageButton imageButtonEmail;
     private FragmentManager fragmentManager;
     private FrameLayout frameLayoutFragments;
     private Photo photo;
@@ -85,6 +88,24 @@ public class FragmentPhoto extends Fragment {
         if (bitmap != null) {
             imageViewPhoto.setImageBitmap(bitmap);
         }
+
+        imageButtonComments = view.findViewById(R.id.imageButtonComments);
+        imageButtonEmail = view.findViewById(R.id.imageButtonEmail);
+
+        imageButtonComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seeComments();
+            }
+        });
+
+        imageButtonEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmail();
+            }
+        });
+
         registerForContextMenu(imageViewPhoto);
     }
 
@@ -102,23 +123,31 @@ public class FragmentPhoto extends Fragment {
         // return super.onContextItemSelected(item);
         //Toast.makeText(getActivity(),item.getTitle() + " clicked", Toast.LENGTH_LONG).show();
         if (item.getTitle().toString().equals("Ver comentarios")) {
-            FragmentComments fragmentComments = new FragmentComments();
-            fragmentComments.setPhoto(photo);
-            fragmentComments.setAdapter(new AdapterComments(getActivity()));
-            FragmentTransaction fragTransaction = fragmentManager.beginTransaction();
-            fragTransaction.addToBackStack(null);
-            fragTransaction.replace(R.id.frameLayoutFragments, fragmentComments,
-                    "CommentFragment").commit();
+            this.seeComments();
         }
         if (item.getTitle().toString().equals("Enviar url por mail")) {
-            String url = "https://live.staticflickr.com/" + photo.getServer() + "/"
-                    + photo.getPhotoID() + "_" + photo.getSecret() + ".jpg";
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Foto de Flickr");
-            intent.putExtra(Intent.EXTRA_TEXT, "url: " + url);
-            startActivity(Intent.createChooser(intent, "Enviar Email"));
+            this.sendEmail();
         }
         return true;
+    }
+
+    private void seeComments() {
+        FragmentComments fragmentComments = new FragmentComments();
+        fragmentComments.setPhoto(photo);
+        fragmentComments.setAdapter(new AdapterComments(getActivity()));
+        FragmentTransaction fragTransaction = fragmentManager.beginTransaction();
+        fragTransaction.addToBackStack(null);
+        fragTransaction.replace(R.id.frameLayoutFragments, fragmentComments,
+                "CommentFragment").commit();
+    }
+
+    private void sendEmail() {
+        String url = "https://live.staticflickr.com/" + photo.getServer() + "/"
+                + photo.getPhotoID() + "_" + photo.getSecret() + ".jpg";
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Foto de Flickr");
+        intent.putExtra(Intent.EXTRA_TEXT, "url: " + url);
+        startActivity(Intent.createChooser(intent, "Enviar Email"));
     }
 }

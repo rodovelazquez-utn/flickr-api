@@ -194,11 +194,11 @@ public class FlickrDataProvider {
         }
     }
 
-    private void dialogEmptyDB(){
+    private void dialogEmptyDB() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Error!");
-        builder.setMessage("No hay datos para mostrar en la Base de Datos. Intente activar su " +
-                "conexión a Internet para conectarse con la API y poder recibir las fotos");
+        builder.setMessage("There's no data on the database to show. Try to establish a network " +
+                "connection in order to gather the photos from the API");
 
         builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             @Override

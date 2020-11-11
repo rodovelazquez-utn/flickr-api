@@ -6,10 +6,10 @@
 
         <EditTextPreference
             android:key="name_field"
-            android:title="Nombre de Usuario"
-            android:summary="Ingrese su nombre de Usuario"
-            android:dialogTitle="Tu usernsme..."
-            android:dialogMessage="Ingrese su nombre de Usuario"
+            android:title="Username"
+            android:summary="Type in your username"
+            android:dialogTitle="Your usernsme..."
+            android:dialogMessage="Type in your username"
             android:defaultValue=" "
             android:inputType="textCapWords">
 
@@ -19,12 +19,12 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Ordenamiento"
+        android:title="Order by"
         android:key="order_category">
 
         <ListPreference
             android:key="order_field"
-            android:title="Orden de los elementos"
+            android:title="Element's showing order"
             android:entries="@array/order_field"
             android:entryValues="@array/order_values"
             android:defaultValue="id">

@@ -11,8 +11,8 @@
     </string-array>
 
     <string-array name="order_field">
-        <item name="name_asc">Nombre ascendente</item>
-        <item name="id">Id del elemento</item>
+        <item name="name_asc">Name A-Z</item>
+        <item name="id">Element id</item>
         <!--<item name="name_desc">Nombre descendente</item>-->
     </string-array>
 

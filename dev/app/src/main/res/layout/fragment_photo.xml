@@ -5,12 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FragmentPhoto">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment Photo"
-        android:gravity="center" />
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,23 +25,30 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/buttonEmail"
-                android:layout_weight="1"
+            <ImageButton
+                android:layout_height="match_parent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Enviar url por email">
+                android:id="@+id/imageButtonComments"
+                android:src="@drawable/ic_comments">
 
-            </Button>
+            </ImageButton>
+
+            <ImageButton
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:id="@+id/imageButtonEmail"
+                android:src="@drawable/ic_email">
+
+            </ImageButton>
 
             <TextView
                 android:id="@+id/textViewSwipeComments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Tap and hold for options">
+                android:text="Tap and hold the image for options">
 
             </TextView>
 

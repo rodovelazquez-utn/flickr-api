@@ -29,14 +29,14 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         try
         {
             if (FlickrApplication.getDataProvider().isNetworkConnection()) {
-                String text = "En línea!!";
-                this.makeSnackbar(snackbar, text, Snackbar.LENGTH_LONG);
-                Log.e("keshav", "Online Connect Intenet ");
+                String text = "Online!";
+                this.makeSnackbar(snackbar, text, Snackbar.LENGTH_SHORT);
+                Log.e("NetworkChange", "Online Connect Intenet ");
                 FlickrApplication.getDataProvider().loadFlickrAlbums(adapterAlbums);
             } else {
-                String text = "No se pudo establecer conexión";
+                String text = "Couldn't stablish connection";
                 this.makeSnackbar(snackbar, text, Snackbar.LENGTH_INDEFINITE);
-                Log.e("keshav", "Conectivity Failure !!! ");
+                Log.e("NetworkChange", "Conectivity Failure !!! ");
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
