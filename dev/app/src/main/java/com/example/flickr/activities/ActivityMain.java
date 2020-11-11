@@ -136,6 +136,9 @@ public class ActivityMain extends AppCompatActivity implements
         fragPhoto.setFrameLayout(frameLayoutFragments);
         fragPhoto.setPhoto(photo);
         FlickrApplication.getBitmapProvider().getBitmapFromUrl(photo, fragPhoto);
+
+        //fragPhoto.setBitmap(FlickrBitmapProvider.getBitmapFromUrl(photo, fragPhoto));
+
         //fragPhoto.setBitmap();
         //FragmentComments fragComments = new FragmentComments();
         //fragComments.setAdapter(new AdapterComments(this));

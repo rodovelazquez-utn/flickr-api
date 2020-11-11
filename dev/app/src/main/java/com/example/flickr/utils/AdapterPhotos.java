@@ -62,6 +62,7 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
         Log.d(TAG, "Element " + position + " set.");
         if (photos != null){
             viewHolder.getTextViewNumber().setText(photos.get(position).getTitle());
+            viewHolder.getTextViewIdPhoto().setText(photos.get(position).getPhotoID());
         }
         if (bitmaps != null) {
             if (bitmaps.get(position) != null) {
@@ -85,6 +86,7 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
 
         private final TextView textViewNumber;
         private final ImageView imageViewThumbnail;
+        private final TextView textViewIdPhoto;
 
         public ViewHolder(View v) {
             super(v);
@@ -99,12 +101,17 @@ public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ViewHolder
 
             imageViewThumbnail = (ImageView) v.findViewById(R.id.imageViewThumbnail);
             textViewNumber = (TextView) v.findViewById(R.id.textViewNumber);
+            textViewIdPhoto = (TextView) v.findViewById(R.id.textViewIdPhoto);
         }
 
         public ImageView getImageViewThumbnail() { return imageViewThumbnail; }
 
         public TextView getTextViewNumber() {
             return textViewNumber;
+        }
+
+        public TextView getTextViewIdPhoto() {
+            return textViewIdPhoto;
         }
     }
 

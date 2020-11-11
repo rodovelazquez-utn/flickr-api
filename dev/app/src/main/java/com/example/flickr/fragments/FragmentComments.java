@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +29,7 @@ public class FragmentComments extends Fragment {
 
     private RecyclerView recyclerViewComments;
     private AdapterComments adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private GridLayoutManager layoutManager;
     private List<Comment> comments;
     private Photo photo;
 
@@ -52,11 +53,11 @@ public class FragmentComments extends Fragment {
         this.adapter = adapter;
     }
 
-    public RecyclerView.LayoutManager getLayoutManager() {
+    public GridLayoutManager getLayoutManager() {
         return layoutManager;
     }
 
-    public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    public void setLayoutManager(GridLayoutManager layoutManager) {
         this.layoutManager = layoutManager;
     }
 
@@ -84,7 +85,7 @@ public class FragmentComments extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_comments, container, false);
         recyclerViewComments = rootView.findViewById(R.id.recyclerViewComments);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerViewComments.setAdapter(adapter);
         this.setRecyclerViewLayoutManager();
 
@@ -114,7 +115,7 @@ public class FragmentComments extends Fragment {
                     .findFirstCompletelyVisibleItemPosition();
         }
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new GridLayoutManager(getActivity(), 1);
 
         recyclerViewComments.setLayoutManager(layoutManager);
         recyclerViewComments.scrollToPosition(scrollPosition);
